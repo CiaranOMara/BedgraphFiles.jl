@@ -2,7 +2,9 @@ module BedgraphFiles
 
 # using Bedgraph
 using IterableTables, DataValues, DataFrames
-import FileIO
+using FileIO
+
+try add_format(format"Bedgraph", (), [".bedgraph"], [:BedgraphFiles]) end
 
 struct BedgraphFile
     filename::String
