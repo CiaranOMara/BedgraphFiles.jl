@@ -2,7 +2,9 @@ module BedgraphFiles
 
 # using Bedgraph
 using IterableTables, DataValues, DataFrames
-import FileIO
+using FileIO
+
+try add_format(format"Bedgraph", (), [".bedgraph"], [:BedgraphFiles]) end # TODO: Remove once BedgraphFiles is registered with FileIO.
 
 struct BedgraphFile
     filename::String
@@ -17,6 +19,7 @@ IterableTables.isiterabletable(x::BedgraphFile) = true
 
 function IterableTables.getiterator(file::BedgraphFile)
 
+    # TODO: read using bedgraph package.
     # df = Bedgraph.read(file.filename, DataFrame)
 
     data = readdlm(file.filename)
@@ -33,14 +36,19 @@ function save(f::FileIO.File{FileIO.format"Bedgraph"}, data)
 
     it = getiterator(data)
 
-#     ds = IterableTables.get_datastreams_source(it)
+    # TODO: save using bedgraph package.
+    # ds = IterableTables.get_datastreams_source(it)
+    #
+    # try
+    #     Bedgraph.write(f.filename, ds)
+    # finally
+    #     Data.close!(ds)
+    # end
+
     try
-#         Bedgraph.write(f.filename, ds)
         output = [convert(Array,it.df[:Chromosome]) convert(Array,it.df[:Start]) convert(Array,it.df[:End]) convert(Array,it.df[:Value]) ]
 
         writedlm(f.filename, output)
-#     finally
-#         Data.close!(ds)
     end
 
 end
