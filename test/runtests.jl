@@ -4,8 +4,6 @@ using BedgraphFiles
 using DataFrames
 using Base.Test
 
-add_format(format"Bedgraph", (), [".bedgraph"], [:BedgraphFiles])
-
 @testset "BedgraphFiles" begin
 
 df = load(joinpath(@__DIR__, "data.bedgraph")) |> DataFrame
