@@ -1,7 +1,7 @@
 module BedgraphFiles
 
 # using Bedgraph
-using IterableTables, DataValues, DataFrames
+using TableTraits, IterableTables, DataValues, DataFrames
 using FileIO
 
 try add_format(format"Bedgraph", (), [".bedgraph"], [:BedgraphFiles]) end # TODO: Remove once BedgraphFiles is registered with FileIO.
@@ -14,10 +14,10 @@ function load(f::FileIO.File{FileIO.format"Bedgraph"})
     return BedgraphFile(f.filename)
 end
 
-IterableTables.isiterable(x::BedgraphFile) = true
-IterableTables.isiterabletable(x::BedgraphFile) = true
+TableTraits.isiterable(x::BedgraphFile) = true
+TableTraits.isiterabletable(x::BedgraphFile) = true
 
-function IterableTables.getiterator(file::BedgraphFile)
+function TableTraits.getiterator(file::BedgraphFile)
 
     # TODO: read using bedgraph package.
     # df = Bedgraph.read(file.filename, DataFrame)
