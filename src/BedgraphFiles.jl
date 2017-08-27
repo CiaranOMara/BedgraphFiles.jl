@@ -24,7 +24,8 @@ function TableTraits.getiterator(file::BedgraphFile)
 
     data = readdlm(file.filename)
 
-    df = DataFrame(Chromosome=data[:,1], Start=data[:,2], End=data[:,3], Value=data[:,4])
+    # Track data format: chrom chromStart chromEnd dataValue
+    df = DataFrame(chrom=data[:,1], chromStart=data[:,2], chromEnd=data[:,3], dataValue=data[:,4])
 
     it = getiterator(df)
 
@@ -46,7 +47,7 @@ function save(f::FileIO.File{FileIO.format"Bedgraph"}, data)
     # end
 
     try
-        output = [convert(Array,it.df[:Chromosome]) convert(Array,it.df[:Start]) convert(Array,it.df[:End]) convert(Array,it.df[:Value]) ]
+        output = [convert(Array,it.df[:chrom]) convert(Array,it.df[:chromStart]) convert(Array,it.df[:chromEnd]) convert(Array,it.df[:dataValue]) ]
 
         writedlm(f.filename, output)
     end
