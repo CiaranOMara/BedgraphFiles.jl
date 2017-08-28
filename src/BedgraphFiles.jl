@@ -1,8 +1,9 @@
 module BedgraphFiles
 
 # using Bedgraph
-using TableTraits, IterableTables, DataValues, DataFrames
+using TableTraits, DataValues, DataFrames
 using FileIO
+import IterableTables
 
 try add_format(format"Bedgraph", (), [".bedgraph"], [:BedgraphFiles]) end # TODO: Remove once BedgraphFiles is registered with FileIO.
 
