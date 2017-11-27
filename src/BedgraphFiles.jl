@@ -52,7 +52,7 @@ end
 
 function save(file::BedgraphFile, tracks::Vector{Bedgraph.Track}; bump_forward = true)
 
-    header = Bedgraph.BedgraphHeader( Bedgraph.generateBasicHeader("chr19", tracks[1].chrom_start, tracks[end].chrom_end, bump_forward = bump_forward) )
+    header = Bedgraph.BedgraphHeader( Bedgraph.generateBasicHeader(tracks, bump_forward = bump_forward) )
 
     return save(file, header, tracks)
 end
