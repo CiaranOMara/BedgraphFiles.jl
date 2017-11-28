@@ -1,3 +1,5 @@
+__precompile__()
+
 module BedgraphFiles
 
 using Bedgraph, TableTraits, IterableTables, DataValues, DataFrames
