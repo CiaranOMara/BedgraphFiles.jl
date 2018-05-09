@@ -30,7 +30,7 @@ using FileIO, BedgraphFiles, DataFrames
 df = DataFrame(load("data.bedgraph"))
 ````
 
-The call to ``load`` returns a ``struct`` that is an [IterableTable.jl](https://github.com/davidanthoff/IterableTables.jl), so it can be passed to any function that can handle iterable tables, i.e. all the sinks in [IterableTable.jl](https://github.com/davidanthoff/IterableTables.jl). Here are some examples of materializing a Bedgraph file into data structures that are not a ``DataFrame``:
+The call to ``load`` returns a ``struct`` that is an [IterableTable.jl](https://github.com/davidanthoff/IterableTables.jl), so it can be passed to any function that can handle iterable tables, i.e. all the sinks in [IterableTable.jl](https://github.com/davidanthoff/IterableTables.jl). Here are some examples of materialising a Bedgraph file into data structures that are not a ``DataFrame``:
 
 ````julia
 using FileIO, BedgraphFiles, DataTables, IndexedTables, Gadfly
