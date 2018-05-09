@@ -47,6 +47,8 @@ plot(load("data.bedgraph"), x=:a, y=:b, Geom.line)
 
 ### Save a Bedgraph file
 
+> **Note:** saving on top of an existing file will overwrite metadata/header information with a minimal working header.
+
 The following code saves any iterable table as a Bedgraph file:
 ````julia
 using FileIO, BedgraphFiles
