@@ -5,8 +5,8 @@ using Base.Test
 
 # try add_format(format"Bedgraph", (), [".bedgraph"], [:BedgraphFiles]) end # TODO: Remove once files is registered with FileIO.
 
-@testset "BedgraphFiles" begin
 
+module Bag
 const chroms = ["chr19", "chr19", "chr19", "chr19", "chr19", "chr19", "chr19", "chr19", "chr19"]
 const chrom_starts = [49302000, 49302300, 49302600, 49302900, 49303200, 49303500, 49303800, 49304100, 49304400]
 const chrom_ends = [49302300, 49302600, 49302900, 49303200, 49303500, 49303800, 49304100, 49304400, 49304700]
@@ -14,11 +14,14 @@ const data_values = [-1.0, -0.75, -0.50, -0.25, 0.0, 0.25, 0.50, 0.75, 1.00]
 
 const file = joinpath(@__DIR__, "data.bedgraph")
 const file_headerless = joinpath(@__DIR__, "data-headerless.bedgraph")
+end # Bag
 
-@test isfile(file)
+@testset "BedgraphFiles" begin
+
+@test isfile(Bag.file)
 
 # Load tests.
-loaded = load(file)
+loaded = load(Bag.file)
 @test isiterable(loaded) == true
 
 ## DataFrame
@@ -41,7 +44,7 @@ df2 = loaded |> DataFrame
 @test df2[:dataValue] == data_values
 
 # Load tests.
-loaded_from_headerless = load(file_headerless)
+loaded_from_headerless = load(Bag.file_headerless)
 @test isiterable(loaded_from_headerless) == true
 
 ## DataFrame from headerless bedGraph file.
