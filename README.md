@@ -3,7 +3,7 @@
 [![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Build Status](https://travis-ci.org/CiaranOMara/BedgraphFiles.jl.svg?branch=master)](https://travis-ci.org/CiaranOMara/BedgraphFiles.jl)
 [![Build status](https://ci.appveyor.com/api/projects/status/jny2ep4u3cmly8pj/branch/master?svg=true)](https://ci.appveyor.com/project/CiaranOMara/Bedgraphfiles-jl/branch/master)
-[![BedgraphFiles](http://pkg.julialang.org/badges/BedgraphFiles_0.6.svg)](http://pkg.julialang.org/?pkg=BedgraphFiles)
+[![BedgraphFiles](http://pkg.julialang.org/badges/BedgraphFiles_0.7.svg)](http://pkg.julialang.org/?pkg=BedgraphFiles)
 [![codecov.io](http://codecov.io/github/CiaranOMara/BedgraphFiles.jl/coverage.svg?branch=master)](http://codecov.io/github/CiaranOMara/BedgraphFiles.jl?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/CiaranOMara/BedgraphFiles.jl/badge.svg?branch=master)](https://coveralls.io/github/CiaranOMara/BedgraphFiles.jl?branch=master)
 
@@ -15,8 +15,12 @@ under the [FileIO.jl](https://github.com/JuliaIO/FileIO.jl) package.
 This package is largely -- if not completely -- inspired by the work of [David Anthoff](https://github.com/davidanthoff).
 
 ## Installation
-
-Use Pkg.add("BedgraphFiles") in Julia to install BedgraphFiles and its dependencies.
+Install BedgraphFiles from the Julia REPL:
+```julia
+using Pkg
+add("BedgraphFiles")
+#Pkg.add("BedgraphFiles") for julia prior to v 0.7
+```
 
 ## Usage
 
