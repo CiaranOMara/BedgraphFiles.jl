@@ -1,10 +1,7 @@
 using FileIO
 using TableTraits
 using DataFrames
-using Base.Test
-
-# try add_format(format"Bedgraph", (), [".bedgraph"], [:BedgraphFiles]) end # TODO: Remove once files is registered with FileIO.
-
+using Test
 
 module Bag
 const chroms = ["chr19", "chr19", "chr19", "chr19", "chr19", "chr19", "chr19", "chr19", "chr19"]
@@ -59,7 +56,6 @@ df_from_headerless = DataFrame(loaded_from_headerless)
 
 # Save test.
 output_filename = tempname() * ".bedgraph"
-info("Saving to temporary file:", output_filename)
 
 df |> save(output_filename)
 
