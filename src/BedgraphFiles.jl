@@ -2,70 +2,91 @@ __precompile__()
 
 module BedgraphFiles
 
-using Bedgraph, TableTraits, IterableTables, DataValues, DataFrames
-using FileIO
+using Bedgraph, DataFrames
 
-# try add_format(format"bedGraph", (), [".bedgraph"], [:BedgraphFiles]) end # TODO: Remove once BedgraphFiles is registered with FileIO.
+using IteratorInterfaceExtensions, TableTraits, TableTraitsUtils
+using DataValues, FileIO, TableShowUtils
 
-BedgraphFile = File{format"bedGraph"}
+import IterableTables
 
-function load(file::BedgraphFile)
-    return BedgraphFile(file.filename)
+export load, save
+
+const BedgraphFileFormat = File{format"bedGraph"}
+
+struct BedgraphFile
+    filename::String
+    keywords
 end
 
-TableTraits.isiterable(x::BedgraphFile) = true
+function Base.show(io::IO, source::BedgraphFile)
+    TableShowUtils.printtable(io, getiterator(source), "bedGraph file")
+end
+
+function fileio_load(f::BedgraphFileFormat; args...)
+    return BedgraphFile(f.filename, args)
+end
+
+IteratorInterfaceExtensions.isiterable(x::BedgraphFile) = true
 TableTraits.isiterabletable(x::BedgraphFile) = true
 
-function TableTraits.getiterator(file::BedgraphFile)
-
+function _loaddata(path)
     # Read file using bedgraph package.
-    tracks = open(file, "r") do stream
-        Bedgraph.readTracks(stream.io)
+    return open(path, "r") do io
+        Bedgraph.readRecords(io)
     end
+end
 
-    # Pack tracks into DataFrame.
-    df = DataFrame( chrom = Vector{String}() , chromStart = Vector{Int}(), chromEnd = Vector{Int}(), dataValue = Vector{Float64}())
+function IteratorInterfaceExtensions.getiterator(file::BedgraphFile)
 
-    for track in tracks # Note: Track data format is chrom chrom_start chrom_end data_value.
-        append!(df, DataFrame(chrom = track.chrom, chromStart = track.chrom_start, chromEnd = track.chrom_end, dataValue = track.data_value))
-    end
+    records = _loaddata(file.filename)
+
+    # Pack records into DataFrame.
+    df = DataFrame(
+        chrom = Bedgraph.chrom.(records)::Vector{String},
+        first = first.(records)::Vector{Int},
+        last = last.(records)::Vector{Int},
+        value = Bedgraph.value.(records)
+    )
 
     it = getiterator(df)
 
     return it
 end
 
-function save(file::BedgraphFile, data; bump_forward = true)
+function Base.collect(x::BedgraphFile)
+    return collect(getiterator(x))
+end
+
+function fileio_save(file::BedgraphFileFormat, header::Bedgraph.BedgraphHeader, records::Vector{Bedgraph.Record})
+    write(file.filename, header, records)
+end
+
+function fileio_save(file::BedgraphFileFormat, records::Vector{Bedgraph.Record}; bump_forward = true)
+
+    #TODO: bump_forward records.
+
+    header = Bedgraph.generateBasicHeader(records, bump_forward = bump_forward)
+
+    return fileio_save(file, header, records)
+end
+
+function fileio_save(file::BedgraphFileFormat, data; bump_forward = true)
     isiterabletable(data) || error("Can't write this data to bedGraph file.")
 
     it = getiterator(data)
 
     df = DataFrame(it)
 
-    # Pack DataFrame in to a vector of type track.
-    tracks = Vector{Track}()
+    # Pack DataFrame in to a vector of type record.
+    records = Vector{Bedgraph.Record}(undef, length(it))
 
-    for row in eachrow(df)
-        push!(tracks, Track(row[1], row[2], row[3], row[4])) # Note: using index to allow flexible column names.
+    for (i, row) in enumerate(eachrow(df))
+        records[i] =  Bedgraph.Record(row[1], row[2], row[3], row[4]) # Note: using index to allow flexible column names.
     end
 
-    return save(file, tracks, bump_forward = bump_forward)
-end
+    header = Bedgraph.generateBasicHeader(records, bump_forward = bump_forward)
 
-function save(file::BedgraphFile, tracks::Vector{Bedgraph.Track}; bump_forward = true)
-
-    header = Bedgraph.BedgraphHeader( Bedgraph.generateBasicHeader(tracks, bump_forward = bump_forward) )
-
-    return save(file, header, tracks)
-end
-
-function save(file::BedgraphFile, header::Bedgraph.BedgraphHeader, tracks::Vector{Bedgraph.Track})
-
-    open(file, "w") do stream
-        write(stream.io, header)
-        write(stream.io, tracks)
-    end
-
+    return fileio_save(file, header, records)
 end
 
 end # module
