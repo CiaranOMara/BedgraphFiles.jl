@@ -26,6 +26,14 @@ add("BedgraphFiles")
 
 ### Load a Bedgraph file
 
+To read a Bedgraph file into a ``Vector{Bedgraph.Record}``, use the following Julia code:
+
+````julia
+using FileIO, BedgraphFiles, Bedgraph
+
+records = Vector{Bedgraph.Record}(load("data.bedgraph"))
+````
+
 To read a Bedgraph file into a ``DataFrame``, use the following Julia code:
 
 ````julia
@@ -52,6 +60,15 @@ plot(load("data.bedgraph"), x=:a, y=:b, Geom.line)
 ### Save a Bedgraph file
 
 > **Note:** saving on top of an existing file will overwrite metadata/header information with a minimal working header.
+
+The following code saves a ``Vector{Bedgraph.Record}`` to a Bedgraph file:
+````julia
+using FileIO, BedgraphFiles, Bedgraph
+
+records = [Bedgraph.Record("chr", i, i + 99, rand()) for i in 1:100:1000]
+
+save("output.bedgraph", records)
+````
 
 The following code saves any iterable table as a Bedgraph file:
 ````julia
