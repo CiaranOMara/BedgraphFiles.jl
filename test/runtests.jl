@@ -82,54 +82,9 @@ Bag.records |> save(Bag.tmp_output_path)
 load("data.bedgraph") |> @filter(_.chrom == "chr19" && _.first > 49302900 && _.last < 49303800) |> save(Bag.tmp_output_path)
 @test [Bedgraph.Record("chr19", 49303200, 49303500, 0.0)] == load(Bag.tmp_output_path) |> Vector{Bedgraph.Record}
 
-@testset "DataFrames" begin
-# DataFrame from Vector{Bedgraph.Record}.
-df = DataFrame(Bag.records)
-
-@test typeof(df) == DataFrame
-@test size(df) == (9,4)
-
-@test df[:chrom] == Bag.chroms
-@test df[:first] == Bag.firsts
-@test df[:last] == Bag.lasts
-@test df[:value] == Bag.values
-
-@test DataFrame(Bag.records) == Bag.records |> DataFrame
-
-# DataFrame from bedGraph file.
-df2 = DataFrame(loader)
-
-@test typeof(df2) == DataFrame
-@test size(df2) == (9,4)
-
-@test df2[:chrom] == Bag.chroms
-@test df2[:first] == Bag.firsts
-@test df2[:last] == Bag.lasts
-@test df2[:value] == Bag.values
-
-@test DataFrame(loader) == loader |> DataFrame
-
-# DataFrame from headerless bedGraph file.
-df3 = DataFrame(loader_from_headerless)
-@test typeof(df3) == DataFrame
-@test size(df3) == (9,4)
-
-@test df3[:chrom] == Bag.chroms
-@test df3[:first] == Bag.firsts
-@test df3[:last] == Bag.lasts
-@test df3[:value] == Bag.values
-
-@test DataFrame(loader_from_headerless) == loader_from_headerless |> DataFrame
-
-# Save and load from DataFrame.
-save(Bag.tmp_output_path, df)
-@test df == load(Bag.tmp_output_path) |> DataFrame
-
-df |> save(Bag.tmp_output_path)
-@test df == load(Bag.tmp_output_path) |> DataFrame
-
-end # test DataFrames
-
+@testset "Integrations" begin
+    include("integrations/test-DataFrames.jl")
+end # testset Transformers
 
 println()
 show(load(Bag.file))
