@@ -90,13 +90,18 @@ function _Records(x) :: Vector{Bedgraph.Record} #TODO: consider formalising Reco
     return convert(Vector{Bedgraph.Record}, cols[1], cols[2], cols[3], cols[4])
 end
 
-Vector{Bedgraph.Record}(x::AbstractVector{T}) where {T<:NamedTuple} = _Records(x) #TODO: consider formalising Records function in bedgraph (ie.g. Bedgraph.Records, Bedgraph.Bedgraph.Records).
+function Vector{Bedgraph.Record}(x::AbstractVector{T}) :: Vector{Bedgraph.Record} where {T<:NamedTuple}
+    @debug "Vector{Bedgraph.Record}(x::AbstractVector{T})"
+    return  _Records(x)
+end
 
 function Vector{Bedgraph.Record}(x::T) :: Vector{Bedgraph.Record} where {T} #TODO: consider formalising Records function in bedgraph (e.g. Bedgraph.Records, Bedgraph.Bedgraph.Records) that returns Vector{Bedgraph.Record}.
 
     if TableTraits.isiterabletable(x)
+        @debug "Vector{Bedgraph.Record}(x) - isiterabletable"
         return _Records(x)
     else
+        @debug "Vector{Bedgraph.Record}(x) - converting"
         return convert(Vector{Bedgraph.Record}, x)
     end
 end

@@ -7,6 +7,9 @@ using TableTraits
 using DataFrames
 
 using Test
+using Logging
+
+# old_logger = global_logger(ConsoleLogger(stdout, Logging.Debug))
 
 module Bag
 const chroms = ["chr19", "chr19", "chr19", "chr19", "chr19", "chr19", "chr19", "chr19", "chr19"]
@@ -22,6 +25,8 @@ end # Bag
 
 @test isfile(Bag.file)
 
+tmp_output_path = tempname() * ".bedgraph"
+
 # Load tests.
 loader = load(Bag.file)
 @test IteratorInterfaceExtensions.isiterable(loader) == true
@@ -35,6 +40,15 @@ records = convert(Vector{Bedgraph.Record}, Bag.chroms, Bag.firsts, Bag.lasts, Ba
 @test TableTraits.isiterabletable(records) == true
 
 @test records == loaded
+
+# Save and load from Vector{Bedgraph.Record}.
+save(tmp_output_path, records)
+
+@debug "direct load into Vector{Bedgraph.Record} - commencing"
+@test records == Vector{Bedgraph.Record}(load(tmp_output_path))
+@debug "direct load into Vector{Bedgraph.Record} - complete"
+
+@test records == load(tmp_output_path) |> Vector{Bedgraph.Record}
 
 ## DataFrame
 df = DataFrame(loaded)
