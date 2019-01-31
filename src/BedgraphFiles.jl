@@ -95,6 +95,11 @@ function Vector{Bedgraph.Record}(x::AbstractVector{T}) :: Vector{Bedgraph.Record
     return  _Records(x)
 end
 
+function Vector{Bedgraph.Record}(file::B) :: Vector{Bedgraph.Record} where {B<:BedgraphFile}
+    @debug "Vector{Bedgraph.Record}(file::BedgraphFile)"
+    return _loaddata(file.filename)
+end
+
 function Vector{Bedgraph.Record}(x::T) :: Vector{Bedgraph.Record} where {T} #TODO: consider formalising Records function in bedgraph (e.g. Bedgraph.Records, Bedgraph.Bedgraph.Records) that returns Vector{Bedgraph.Record}.
 
     if TableTraits.isiterabletable(x)
