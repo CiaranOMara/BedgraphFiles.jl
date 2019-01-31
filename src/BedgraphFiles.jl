@@ -19,6 +19,17 @@ struct BedgraphFile
     keywords
 end
 
+function Base.convert(::Type{Vector{Bedgraph.Record}}, df::DataFrame) :: Vector{Bedgraph.Record}
+
+    records = Vector{Bedgraph.Record}(undef, size(df)[1])
+
+    for (i, row) in enumerate(eachrow(df))
+        records[i] =  Bedgraph.Record(row[1], row[2], row[3], row[4]) # Note: using index to allow flexible column names.
+    end
+
+    return records
+end
+
 function Base.show(io::IO, source::BedgraphFile)
     TableShowUtils.printtable(io, getiterator(source), "bedGraph file")
 end
@@ -81,15 +92,9 @@ function save(file::BedgraphFileFormat, data; bump_forward = true)
     df = DataFrame(it)
 
     # Pack DataFrame in to a vector of type record.
-    records = Vector{Bedgraph.Record}(undef, length(it))
+    records = convert(Vector{Bedgraph.Record}, df)
+    return save(file, records, bump_forward = bump_forward)
 
-    for (i, row) in enumerate(eachrow(df))
-        records[i] =  Bedgraph.Record(row[1], row[2], row[3], row[4]) # Note: using index to allow flexible column names.
-    end
-
-    header = Bedgraph.generateBasicHeader(records, bump_forward = bump_forward)
-
-    return save(file, header, records)
 end
 
 end # module
