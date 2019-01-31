@@ -23,13 +23,18 @@ end # Bag
 @test isfile(Bag.file)
 
 # Load tests.
-loaded = load(Bag.file)
-@test IteratorInterfaceExtensions.isiterable(loaded) == true
-@test TableTraits.isiterabletable(loaded) == true
+loader = load(Bag.file)
+@test IteratorInterfaceExtensions.isiterable(loader) == true
+@test TableTraits.isiterabletable(loader) == true
+
+loaded = Vector{Bedgraph.Record}(loader)
+@test Vector{Bedgraph.Record} == typeof(loaded)
 
 records = convert(Vector{Bedgraph.Record}, Bag.chroms, Bag.firsts, Bag.lasts, Bag.values)
 @test IteratorInterfaceExtensions.isiterable(records) == true
 @test TableTraits.isiterabletable(records) == true
+
+@test records == loaded
 
 ## DataFrame
 df = DataFrame(loaded)
