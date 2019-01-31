@@ -38,6 +38,14 @@ function Base.show(io::IO, source::BedgraphFile)
     TableShowUtils.printtable(io, getiterator(source), "bedGraph file")
 end
 
+function Base.read(file::BedgraphFile) :: Vector{Bedgraph.Record}
+    # Read file using Bedgraph package.
+    return open(file.filename, "r") do io
+        Bedgraph.readRecords(io)
+    end
+
+end
+
 function load(f::BedgraphFileFormat; args...)
     return BedgraphFile(f.filename, args)
 end
@@ -46,14 +54,6 @@ IteratorInterfaceExtensions.isiterable(x::BedgraphFile) = true
 TableTraits.isiterabletable(x::BedgraphFile) = true
 IteratorInterfaceExtensions.isiterable(x::Vector{Bedgraph.Record}) = true #Note: Vector{Bedgraph.Record} is iterable by default.
 TableTraits.isiterabletable(x::Vector{Bedgraph.Record}) = true
-
-
-function _loaddata(path) :: Vector{Bedgraph.Record}
-    # Read file using bedgraph package.
-    return open(path, "r") do io
-        Bedgraph.readRecords(io)
-    end
-end
 
 function IteratorInterfaceExtensions.getiterator(records::Vector{Bedgraph.Record})
 
@@ -73,7 +73,7 @@ end
 
 function IteratorInterfaceExtensions.getiterator(file::BedgraphFile)
 
-    records = _loaddata(file.filename)
+    records = read(file) #TODO: Generate iterator from first record?
 
     it = getiterator(records)
 
@@ -97,7 +97,7 @@ end
 
 function Vector{Bedgraph.Record}(file::B) :: Vector{Bedgraph.Record} where {B<:BedgraphFile}
     @debug "Vector{Bedgraph.Record}(file::BedgraphFile)"
-    return _loaddata(file.filename)
+    return read(file)
 end
 
 function Vector{Bedgraph.Record}(x::T) :: Vector{Bedgraph.Record} where {T} #TODO: consider formalising Records function in bedgraph (e.g. Bedgraph.Records, Bedgraph.Bedgraph.Records) that returns Vector{Bedgraph.Record}.
