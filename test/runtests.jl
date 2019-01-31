@@ -19,11 +19,12 @@ const values = [-1.0, -0.75, -0.50, -0.25, 0.0, 0.25, 0.50, 0.75, 1.00]
 
 const file = joinpath(@__DIR__, "data.bedgraph")
 const file_headerless = joinpath(@__DIR__, "data-headerless.bedgraph")
-end # Bag
+end # module Bag
 
 @testset "BedgraphFiles" begin
 
 @test isfile(Bag.file)
+@test isfile(Bag.file_headerless)
 
 tmp_output_path = tempname() * ".bedgraph"
 
@@ -35,11 +36,19 @@ loader = load(Bag.file)
 loaded = Vector{Bedgraph.Record}(loader)
 @test Vector{Bedgraph.Record} == typeof(loaded)
 
+loader_from_headerless = load(Bag.file_headerless)
+@test isiterable(loader_from_headerless) == true
+@test TableTraits.isiterabletable(loader_from_headerless) == true
+
+loaded_from_headerless = Vector{Bedgraph.Record}(loader_from_headerless)
+@test Vector{Bedgraph.Record} == typeof(loaded_from_headerless)
+
 records = convert(Vector{Bedgraph.Record}, Bag.chroms, Bag.firsts, Bag.lasts, Bag.values)
 @test IteratorInterfaceExtensions.isiterable(records) == true
 @test TableTraits.isiterabletable(records) == true
 
 @test records == loaded
+@test records == loaded_from_headerless
 
 # Save and load from Vector{Bedgraph.Record}.
 save(tmp_output_path, records)
@@ -50,9 +59,17 @@ save(tmp_output_path, records)
 
 @test records == load(tmp_output_path) |> Vector{Bedgraph.Record}
 
-## DataFrame
-df = DataFrame(loaded)
+# Save usign query.
+records |> save(tmp_output_path)
+@test records == Vector{Bedgraph.Record}(load(tmp_output_path))
+@test records == load(tmp_output_path) |> Vector{Bedgraph.Record}
 
+
+@testset "DataFrames" begin
+# DataFrame from Vector{Bedgraph.Record}.
+df = DataFrame(records)
+
+@test typeof(df) == DataFrame
 @test size(df) == (9,4)
 
 @test df[:chrom] == Bag.chroms
@@ -60,8 +77,12 @@ df = DataFrame(loaded)
 @test df[:last] == Bag.lasts
 @test df[:value] == Bag.values
 
-## Query DataFrame
-df2 = loaded |> DataFrame
+@test DataFrame(records) == records |> DataFrame
+
+# DataFrame from bedGraph file.
+df2 = DataFrame(loader)
+
+@test typeof(df2) == DataFrame
 @test size(df2) == (9,4)
 
 @test df2[:chrom] == Bag.chroms
@@ -69,27 +90,32 @@ df2 = loaded |> DataFrame
 @test df2[:last] == Bag.lasts
 @test df2[:value] == Bag.values
 
-# Load tests.
-loaded_from_headerless = load(Bag.file_headerless)
-@test isiterable(loaded_from_headerless) == true
+@test DataFrame(loader) == loader |> DataFrame
 
-## DataFrame from headerless bedGraph file.
-df_from_headerless = DataFrame(loaded_from_headerless)
+# DataFrame from headerless bedGraph file.
+df3 = DataFrame(loader_from_headerless)
+@test typeof(df3) == DataFrame
+@test size(df3) == (9,4)
 
-@test size(df_from_headerless) == (9,4)
+@test df3[:chrom] == Bag.chroms
+@test df3[:first] == Bag.firsts
+@test df3[:last] == Bag.lasts
+@test df3[:value] == Bag.values
 
-@test df_from_headerless[:chrom] == Bag.chroms
-@test df_from_headerless[:first] == Bag.firsts
-@test df_from_headerless[:last] == Bag.lasts
-@test df_from_headerless[:value] == Bag.values
+@test DataFrame(loader_from_headerless) == loader_from_headerless |> DataFrame
 
-# Save test.
-output_filename = tempname() * ".bedgraph"
+# Save and load from DataFrame.
+save(tmp_output_path, df)
+@test df == load(tmp_output_path) |> DataFrame
 
-df |> save(output_filename)
+df |> save(tmp_output_path)
+@test df == load(tmp_output_path) |> DataFrame
 
-loaded_df = load(output_filename) |> DataFrame
+end # test DataFrames
 
-@test df == loaded_df
+
+println()
+show(load(Bag.file))
+println()
 
 end
