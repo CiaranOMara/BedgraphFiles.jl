@@ -84,6 +84,16 @@ function Base.collect(x::BedgraphFile)
     return collect(getiterator(x))
 end
 
+function _Records(x) :: Vector{Bedgraph.Record} #TODO: consider formalising Records function in bedgraph (i.e. Bedgraph.Records).
+    if TableTraits.isiterabletable(x)
+        cols, names = create_columns_from_iterabletable(x, na_representation=:missing)
+
+        return convert(Vector{Bedgraph.Record}, cols[1], cols[2], cols[3], cols[4])
+    else
+        return convert(Vector{Bedgraph.Record}, x)
+    end
+end
+
 function save(file::BedgraphFileFormat, header::Bedgraph.BedgraphHeader, records::Vector{Bedgraph.Record})
     write(file.filename, header, records)
 end
@@ -103,10 +113,7 @@ function save(file::BedgraphFileFormat, data; bump_forward = true)
 
     it = getiterator(data)
 
-    df = DataFrame(it)
-
-    # Pack DataFrame in to a vector of type record.
-    records = convert(Vector{Bedgraph.Record}, df)
+    records = _Records(it)
 
     return save(file, records, bump_forward = bump_forward)
 end
