@@ -100,7 +100,6 @@ function save(file::BedgraphFileFormat, records::Vector{Bedgraph.Record}; bump_f
 end
 
 function save(file::BedgraphFileFormat, data; bump_forward = true)
-    isiterabletable(data) || error("Can't write this data to bedGraph file.")
 
     it = getiterator(data)
 
@@ -108,8 +107,8 @@ function save(file::BedgraphFileFormat, data; bump_forward = true)
 
     # Pack DataFrame in to a vector of type record.
     records = convert(Vector{Bedgraph.Record}, df)
-    return save(file, records, bump_forward = bump_forward)
 
+    return save(file, records, bump_forward = bump_forward)
 end
 
 end # module
