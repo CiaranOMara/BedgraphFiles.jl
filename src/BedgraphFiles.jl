@@ -117,11 +117,9 @@ end
 
 function save(file::BedgraphFileFormat, records::Vector{Bedgraph.Record}; bump_forward = true)
 
-    #TODO: bump_forward records.
-
     sort!(records)
 
-    header = Bedgraph.generateBasicHeader(records, bump_forward = bump_forward)
+    header = Bedgraph.generateBasicHeader(records, bump_forward = bump_forward) #TODO: consolidate header generation and determine whether there is a need for bump_forward.
 
     return save(file, header, records)
 end
