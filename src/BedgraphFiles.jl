@@ -56,15 +56,7 @@ function IteratorInterfaceExtensions.getiterator(file::BedgraphFile)
 
     records = _loaddata(file.filename)
 
-    # Pack records into DataFrame.
-    df = DataFrame(
-        chrom = Bedgraph.chrom.(records)::Vector{String},
-        first = first.(records)::Vector{Int},
-        last = last.(records)::Vector{Int},
-        value = Bedgraph.value.(records)
-    )
-
-    it = getiterator(df)
+    it = getiterator(records)
 
     return it
 end
