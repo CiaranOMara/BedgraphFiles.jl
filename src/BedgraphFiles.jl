@@ -48,7 +48,7 @@ IteratorInterfaceExtensions.isiterable(x::Vector{Bedgraph.Record}) = true #Note:
 TableTraits.isiterabletable(x::Vector{Bedgraph.Record}) = true
 
 
-function _loaddata(path)
+function _loaddata(path) :: Vector{Bedgraph.Record}
     # Read file using bedgraph package.
     return open(path, "r") do io
         Bedgraph.readRecords(io)
