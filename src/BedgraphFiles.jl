@@ -44,12 +44,31 @@ end
 
 IteratorInterfaceExtensions.isiterable(x::BedgraphFile) = true
 TableTraits.isiterabletable(x::BedgraphFile) = true
+IteratorInterfaceExtensions.isiterable(x::Vector{Bedgraph.Record}) = true #Note: Vector{Bedgraph.Record} is iterable by default.
+TableTraits.isiterabletable(x::Vector{Bedgraph.Record}) = true
+
 
 function _loaddata(path)
     # Read file using bedgraph package.
     return open(path, "r") do io
         Bedgraph.readRecords(io)
     end
+end
+
+function IteratorInterfaceExtensions.getiterator(records::Vector{Bedgraph.Record})
+
+    columns = [
+        Bedgraph.chrom.(records),
+        Bedgraph.first.(records),
+        Bedgraph.last.(records),
+        Bedgraph.value.(records)
+    ]
+
+    names = Symbol[:chrom, :first, :last, :value]
+
+    it = TableTraitsUtils.create_tableiterator(columns, names)
+
+    return it
 end
 
 function IteratorInterfaceExtensions.getiterator(file::BedgraphFile)

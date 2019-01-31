@@ -27,6 +27,9 @@ loaded = load(Bag.file)
 @test IteratorInterfaceExtensions.isiterable(loaded) == true
 @test TableTraits.isiterabletable(loaded) == true
 
+records = convert(Vector{Bedgraph.Record}, Bag.chroms, Bag.firsts, Bag.lasts, Bag.values)
+@test IteratorInterfaceExtensions.isiterable(records) == true
+@test TableTraits.isiterabletable(records) == true
 
 ## DataFrame
 df = DataFrame(loaded)
