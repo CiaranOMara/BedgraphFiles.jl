@@ -1,11 +1,13 @@
 __precompile__()
 
 module BedgraphFiles
+using FileIO
 
-using Bedgraph, DataFrames
+using Bedgraph
+using DataFrames
 
 using IteratorInterfaceExtensions, TableTraits, TableTraitsUtils
-using DataValues, FileIO, TableShowUtils
+using TableShowUtils
 
 import IterableTables
 
