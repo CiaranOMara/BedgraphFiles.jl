@@ -1,10 +1,11 @@
-using BedgraphFiles
+using FileIO, BedgraphFiles
+using Bedgraph
+
 using IteratorInterfaceExtensions
 using TableTraits
-using IterableTables
-using FileIO
-using DataValues
+
 using DataFrames
+
 using Test
 
 module Bag
