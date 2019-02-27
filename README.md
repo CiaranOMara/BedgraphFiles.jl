@@ -24,9 +24,9 @@ add("BedgraphFiles")
 
 ## Usage
 
-### Load a Bedgraph file
+### Loading a Bedgraph file
 
-To read a Bedgraph file into a ``Vector{Bedgraph.Record}``, use the following Julia code:
+To load a Bedgraph file into a ``Vector{Bedgraph.Record}``, use the following Julia code:
 
 ````julia
 using FileIO, BedgraphFiles, Bedgraph
@@ -34,17 +34,33 @@ using FileIO, BedgraphFiles, Bedgraph
 records = Vector{Bedgraph.Record}(load("data.bedgraph"))
 ````
 
-To read a Bedgraph file into a ``DataFrame``, use the following Julia code:
+### Saving a Bedgraph file
 
+> **Note:** saving on top of an existing file will overwrite metadata/header information with a minimal working header.
+
+The following example saves a ``Vector{Bedgraph.Record}`` to a Bedgraph file:
 ````julia
+using FileIO, BedgraphFiles, Bedgraph
+
+records = [Bedgraph.Record("chr", i, i + 99, rand()) for i in 1:100:1000]
+
+save("output.bedgraph", records)
+````
+
+### IterableTables
+The call to ``load`` returns a ``struct`` that is an [IterableTable.jl](https://github.com/davidanthoff/IterableTables.jl), so it can be passed to any function that can handle iterable tables, i.e. all the sinks in [IterableTable.jl](https://github.com/davidanthoff/IterableTables.jl).
+
+To load a Bedgraph file into a `DataFrame`, use the following Julia code:
+
+```julia
 using FileIO, BedgraphFiles, DataFrames
 
 df = DataFrame(load("data.bedgraph"))
-````
+```
 
-The call to ``load`` returns a ``struct`` that is an [IterableTable.jl](https://github.com/davidanthoff/IterableTables.jl), so it can be passed to any function that can handle iterable tables, i.e. all the sinks in [IterableTable.jl](https://github.com/davidanthoff/IterableTables.jl). Here are some examples of materialising a Bedgraph file into data structures that are not a ``DataFrame``:
+Here are some examples of materialising a Bedgraph file into data structures that are not a `DataFrame`:
 
-````julia
+```julia
 using FileIO, BedgraphFiles, DataTables, IndexedTables, Gadfly
 
 # Load into a DataTable
@@ -55,47 +71,37 @@ it = IndexedTable(load("data.bedgraph"))
 
 # Plot directly with Gadfly
 plot(load("data.bedgraph"), x=:a, y=:b, Geom.line)
-````
-
-### Save a Bedgraph file
-
-> **Note:** saving on top of an existing file will overwrite metadata/header information with a minimal working header.
-
-The following code saves a ``Vector{Bedgraph.Record}`` to a Bedgraph file:
-````julia
-using FileIO, BedgraphFiles, Bedgraph
-
-records = [Bedgraph.Record("chr", i, i + 99, rand()) for i in 1:100:1000]
-
-save("output.bedgraph", records)
-````
+```
 
 The following code saves any iterable table as a Bedgraph file:
-````julia
+```julia
 using FileIO, BedgraphFiles
 
+it = getiterator(data)
+
 save("output.bedgraph", it)
-````
-This will work as long as ``it`` is any of the types supported as sources in [IterableTables.jl](https://github.com/davidanthoff/IterableTables.jl).
+```
+This will work as long as `it` is any of the types supported as sources in [IterableTables.jl](https://github.com/davidanthoff/IterableTables.jl).
+
 
 ### Using the pipe syntax
 
-Both ``load`` and ``save`` also support the pipe syntax. For example, to load a Bedgraph file into a ``DataFrame``, one can use the following code:
+Both `load` and `save` also support the pipe syntax. For example, to load a Bedgraph file into a `DataFrame`, one can use the following code:
 
-````julia
+```julia
 using FileIO, BedgraphFiles, DataFrame
 
 df = load("data.bedgraph") |> DataFrame
-````
+```
 
 To save an iterable table, one can use the following form:
 
-````julia
+```julia
 using FileIO, BedgraphFiles, DataFrame
 
 df = # Aquire a DataFrame somehow
 
 df |> save("output.bedgraph")
-````
+```
 
-The pipe syntax is especially useful when combining it with [Query.jl](https://github.com/davidanthoff/Query.jl) queries, for example one can easily load a Bedgraph file, pipe it into a query, then pipe it to the ``save`` function to store the results in a new file.
+The pipe syntax is especially useful when combining it with [Query.jl](https://github.com/davidanthoff/Query.jl) queries, for example one can easily load a Bedgraph file, pipe it into a query, then pipe it to the `save` function to store the results in a new file.
