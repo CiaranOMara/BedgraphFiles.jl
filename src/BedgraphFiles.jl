@@ -1,10 +1,11 @@
 __precompile__()
 
 module BedgraphFiles
+
 using FileIO
+using Requires
 
 using Bedgraph
-using DataFrames
 
 using IteratorInterfaceExtensions, TableTraits, TableTraitsUtils
 using TableShowUtils
@@ -12,26 +13,15 @@ using TableShowUtils
 import IterableTables
 
 
+function __init__()
+    @require DataFrames="a93c6f00-e57d-5684-b7b6-d8193f3e46c0" include(joinpath(@__DIR__, "integrations","DataFrames.jl")) 
+end
+
 const BedgraphFileFormat = File{format"bedGraph"}
 
 struct BedgraphFile
     filename::String
     keywords
-end
-
-function Base.convert(::Type{Bedgraph.Record}, row::DataFrameRow) :: Bedgraph.Record
-    return Bedgraph.Record(row[1], row[2], row[3], row[4]) # Note: using index to allow flexible column names.
-end
-
-function Base.convert(::Type{Vector{Bedgraph.Record}}, df::DataFrame) :: Vector{Bedgraph.Record}
-
-    records = Vector{Bedgraph.Record}(undef, size(df)[1])
-
-    for (i, row) in enumerate(eachrow(df))
-        records[i] = convert(Bedgraph.Record, row)
-    end
-
-    return records
 end
 
 function Base.show(io::IO, source::BedgraphFile)
