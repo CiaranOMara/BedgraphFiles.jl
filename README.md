@@ -104,4 +104,10 @@ df = # Aquire a DataFrame somehow
 df |> save("output.bedgraph")
 ```
 
+The `save` method returns the data provided or `Vector{Bedgraph.Record}`. This is useful when periodically saving your work during a sequence of operations.
+
+```julia
+records = some sequence of operations |> save("output.bedgraph")
+```
+
 The pipe syntax is especially useful when combining it with [Query.jl](https://github.com/davidanthoff/Query.jl) queries, for example one can easily load a Bedgraph file, pipe it into a query, then pipe it to the `save` function to store the results in a new file.
