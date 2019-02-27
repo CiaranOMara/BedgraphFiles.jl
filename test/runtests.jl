@@ -5,6 +5,7 @@ using IteratorInterfaceExtensions
 using TableTraits
 
 using DataFrames
+using Query
 
 using Test
 using Logging
@@ -59,11 +60,17 @@ save(tmp_output_path, records)
 
 @test records == load(tmp_output_path) |> Vector{Bedgraph.Record}
 
-# Save usign query.
+# Save using query.
 records |> save(tmp_output_path)
 @test records == Vector{Bedgraph.Record}(load(tmp_output_path))
 @test records == load(tmp_output_path) |> Vector{Bedgraph.Record}
 
+# Check return of data from save method.
+@test records == records |> save(tmp_output_path)
+
+# Check piping/continuations through Query.jl.
+load("data.bedgraph") |> @filter(_.chrom == "chr19" && _.first > 49302900 && _.last < 49303800) |> save(tmp_output_path)
+@test [Bedgraph.Record("chr19", 49303200, 49303500, 0.0)] == load(tmp_output_path) |> Vector{Bedgraph.Record}
 
 @testset "DataFrames" begin
 # DataFrame from Vector{Bedgraph.Record}.
