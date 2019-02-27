@@ -111,11 +111,14 @@ function Vector{Bedgraph.Record}(x::T) :: Vector{Bedgraph.Record} where {T} #TOD
     end
 end
 
-function save(file::BedgraphFileFormat, header::Bedgraph.BedgraphHeader, records::Vector{Bedgraph.Record})
+function save(file::BedgraphFileFormat, header::Bedgraph.BedgraphHeader, records::Vector{Bedgraph.Record}) :: Vector{Bedgraph.Record}
+
     write(file.filename, header, records)
+
+    return records #Note: this return is useful when piping (e.g., records = some_operation | save(file)).
 end
 
-function save(file::BedgraphFileFormat, records::Vector{Bedgraph.Record}; bump_forward = true)
+function save(file::BedgraphFileFormat, records::Vector{Bedgraph.Record}; bump_forward = true) :: Vector{Bedgraph.Record}
 
     sort!(records)
 
@@ -130,7 +133,9 @@ function save(file::BedgraphFileFormat, data; bump_forward = true)
 
     records = Vector{Bedgraph.Record}(it)
 
-    return save(file, records, bump_forward = bump_forward)
+    save(file, records, bump_forward = bump_forward)
+
+    return data #Note: this return is usful when piping.
 end
 
 end # module

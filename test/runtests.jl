@@ -64,6 +64,8 @@ records |> save(tmp_output_path)
 @test records == Vector{Bedgraph.Record}(load(tmp_output_path))
 @test records == load(tmp_output_path) |> Vector{Bedgraph.Record}
 
+# Check return of data from save method.
+@test records == records |> save(tmp_output_path)
 
 @testset "DataFrames" begin
 # DataFrame from Vector{Bedgraph.Record}.
