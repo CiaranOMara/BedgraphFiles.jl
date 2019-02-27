@@ -110,4 +110,9 @@ The `save` method returns the data provided or `Vector{Bedgraph.Record}`. This i
 records = some sequence of operations |> save("output.bedgraph")
 ```
 
-The pipe syntax is especially useful when combining it with [Query.jl](https://github.com/davidanthoff/Query.jl) queries, for example one can easily load a Bedgraph file, pipe it into a query, then pipe it to the `save` function to store the results in a new file.
+The pipe syntax is especially useful when combining it with [Query.jl](https://github.com/davidanthoff/Query.jl) queries. For example, one can easily load a Bedgraph file, pipe it into a query, then pipe it to the `save` function to store the results in a new file.
+
+```julia
+using FileIO, BedgraphFiles, Query
+load("data.bedgraph") |> @filter(_.chrom == "chr19") |> save("data-chr19.bedgraph")
+```
