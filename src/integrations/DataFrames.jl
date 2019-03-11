@@ -1,4 +1,4 @@
-@info "BedgraphFiles loading DataFrames integration."
+@debug "BedgraphFiles loading DataFrames integration."
 
 function Base.convert(::Type{Bedgraph.Record}, row::DataFrames.DataFrameRow) :: Bedgraph.Record
     return Bedgraph.Record(row[1], row[2], row[3], row[4]) # Note: using index to allow flexible column names.
