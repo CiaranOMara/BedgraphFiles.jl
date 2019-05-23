@@ -1,16 +1,21 @@
 __precompile__()
 
 module BedgraphFiles
+
 using FileIO
+using Requires
 
 using Bedgraph
-using DataFrames
 
 using IteratorInterfaceExtensions, TableTraits, TableTraitsUtils
 using TableShowUtils
 
 import IterableTables
 
+
+function __init__()
+    @require DataFrames="a93c6f00-e57d-5684-b7b6-d8193f3e46c0" include(joinpath(@__DIR__, "integrations","DataFrames.jl")) 
+end
 
 const BedgraphFileFormat = File{format"bedGraph"}
 
@@ -19,23 +24,16 @@ struct BedgraphFile
     keywords
 end
 
-function Base.convert(::Type{Bedgraph.Record}, row::DataFrameRow) :: Bedgraph.Record
-    return Bedgraph.Record(row[1], row[2], row[3], row[4]) # Note: using index to allow flexible column names.
-end
-
-function Base.convert(::Type{Vector{Bedgraph.Record}}, df::DataFrame) :: Vector{Bedgraph.Record}
-
-    records = Vector{Bedgraph.Record}(undef, size(df)[1])
-
-    for (i, row) in enumerate(eachrow(df))
-        records[i] = convert(Bedgraph.Record, row)
-    end
-
-    return records
-end
-
 function Base.show(io::IO, source::BedgraphFile)
     TableShowUtils.printtable(io, getiterator(source), "bedGraph file")
+end
+
+function Base.read(file::BedgraphFile) :: Vector{Bedgraph.Record}
+    # Read file using Bedgraph package.
+    return open(file.filename, "r") do io
+        Bedgraph.readRecords(io)
+    end
+
 end
 
 function load(f::BedgraphFileFormat; args...)
@@ -46,14 +44,6 @@ IteratorInterfaceExtensions.isiterable(x::BedgraphFile) = true
 TableTraits.isiterabletable(x::BedgraphFile) = true
 IteratorInterfaceExtensions.isiterable(x::Vector{Bedgraph.Record}) = true #Note: Vector{Bedgraph.Record} is iterable by default.
 TableTraits.isiterabletable(x::Vector{Bedgraph.Record}) = true
-
-
-function _loaddata(path) :: Vector{Bedgraph.Record}
-    # Read file using bedgraph package.
-    return open(path, "r") do io
-        Bedgraph.readRecords(io)
-    end
-end
 
 function IteratorInterfaceExtensions.getiterator(records::Vector{Bedgraph.Record})
 
@@ -73,7 +63,7 @@ end
 
 function IteratorInterfaceExtensions.getiterator(file::BedgraphFile)
 
-    records = _loaddata(file.filename)
+    records = read(file) #TODO: Generate iterator from first record?
 
     it = getiterator(records)
 
@@ -97,7 +87,7 @@ end
 
 function Vector{Bedgraph.Record}(file::B) :: Vector{Bedgraph.Record} where {B<:BedgraphFile}
     @debug "Vector{Bedgraph.Record}(file::BedgraphFile)"
-    return _loaddata(file.filename)
+    return read(file)
 end
 
 function Vector{Bedgraph.Record}(x::T) :: Vector{Bedgraph.Record} where {T} #TODO: consider formalising Records function in bedgraph (e.g. Bedgraph.Records, Bedgraph.Bedgraph.Records) that returns Vector{Bedgraph.Record}.
