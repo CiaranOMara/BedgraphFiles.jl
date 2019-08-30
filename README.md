@@ -3,6 +3,7 @@
 [![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Build Status](https://travis-ci.org/CiaranOMara/BedgraphFiles.jl.svg?branch=master)](https://travis-ci.org/CiaranOMara/BedgraphFiles.jl)
 [![Build status](https://ci.appveyor.com/api/projects/status/jny2ep4u3cmly8pj/branch/master?svg=true)](https://ci.appveyor.com/project/CiaranOMara/Bedgraphfiles-jl/branch/master)
+[![Build Status](https://api.cirrus-ci.com/github/CiaranOMara/BedgraphFiles.jl.svg)](https://cirrus-ci.com/github/CiaranOMara/BedgraphFiles.jl)
 [![codecov.io](http://codecov.io/github/CiaranOMara/BedgraphFiles.jl/coverage.svg?branch=master)](http://codecov.io/github/CiaranOMara/BedgraphFiles.jl?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/CiaranOMara/BedgraphFiles.jl/badge.svg?branch=master)](https://coveralls.io/github/CiaranOMara/BedgraphFiles.jl?branch=master)
 
