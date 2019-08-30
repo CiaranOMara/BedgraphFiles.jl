@@ -5,7 +5,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/jny2ep4u3cmly8pj/branch/master?svg=true)](https://ci.appveyor.com/project/CiaranOMara/Bedgraphfiles-jl/branch/master)
 [![Build Status](https://api.cirrus-ci.com/github/CiaranOMara/BedgraphFiles.jl.svg)](https://cirrus-ci.com/github/CiaranOMara/BedgraphFiles.jl)
 [![codecov.io](http://codecov.io/github/CiaranOMara/BedgraphFiles.jl/coverage.svg?branch=master)](http://codecov.io/github/CiaranOMara/BedgraphFiles.jl?branch=master)
-[![Coverage Status](https://coveralls.io/repos/github/CiaranOMara/BedgraphFiles.jl/badge.svg?branch=master)](https://coveralls.io/github/CiaranOMara/BedgraphFiles.jl?branch=master)
 
 ## Overview
 
