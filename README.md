@@ -12,12 +12,14 @@ This package provides load and save support for [Bedgraph](https://github.com/Ci
 under the [FileIO](https://github.com/JuliaIO/FileIO.jl) package, and also implements the [IterableTables](https://github.com/davidanthoff/IterableTables.jl) interface for easy conversion between tabular data structures.
 
 ## Installation
-You can install BedgraphFiles from the Julia REPL:
+You can install BedgraphFiles from the Julia REPL.
+Press `]` to enter pkg mode, then enter the following:
+
 ```julia
-using Pkg
-add("BedgraphFiles")
-#Pkg.add("BedgraphFiles") for julia prior to v 0.7
+add BedgraphFiles
 ```
+
+If you are interested in the cutting edge of the development, please check out the [develop branch](https://github.com/CiaranOMara/BedgraphFiles.jl/tree/develop) to try new features before release.
 
 ## Usage
 
