@@ -1,7 +1,7 @@
 # BedgraphFiles.jl
 
 [![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
-[![Build Status](https://travis-ci.org/CiaranOMara/BedgraphFiles.jl.svg?branch=master)](https://travis-ci.org/CiaranOMara/BedgraphFiles.jl)
+[![Build Status](https://travis-ci.com/CiaranOMara/BedgraphFiles.jl.svg?branch=master)](https://travis-ci.com/CiaranOMara/BedgraphFiles.jl)
 [![Build status](https://ci.appveyor.com/api/projects/status/jny2ep4u3cmly8pj/branch/master?svg=true)](https://ci.appveyor.com/project/CiaranOMara/Bedgraphfiles-jl/branch/master)
 [![Build Status](https://api.cirrus-ci.com/github/CiaranOMara/BedgraphFiles.jl.svg)](https://cirrus-ci.com/github/CiaranOMara/BedgraphFiles.jl)
 [![codecov.io](http://codecov.io/github/CiaranOMara/BedgraphFiles.jl/coverage.svg?branch=master)](http://codecov.io/github/CiaranOMara/BedgraphFiles.jl?branch=master)
@@ -12,12 +12,14 @@ This package provides load and save support for [Bedgraph](https://github.com/Ci
 under the [FileIO](https://github.com/JuliaIO/FileIO.jl) package, and also implements the [IterableTables](https://github.com/davidanthoff/IterableTables.jl) interface for easy conversion between tabular data structures.
 
 ## Installation
-You can install BedgraphFiles from the Julia REPL:
+You can install BedgraphFiles from the Julia REPL.
+Press `]` to enter pkg mode, then enter the following:
+
 ```julia
-using Pkg
-add("BedgraphFiles")
-#Pkg.add("BedgraphFiles") for julia prior to v 0.7
+add BedgraphFiles
 ```
+
+If you are interested in the cutting edge of the development, please check out the [develop branch](https://github.com/CiaranOMara/BedgraphFiles.jl/tree/develop) to try new features before release.
 
 ## Usage
 

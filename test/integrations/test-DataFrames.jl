@@ -9,10 +9,10 @@
     @test typeof(df) == DataFrame
     @test size(df) == (9,4)
 
-    @test df[:chrom] == Bag.chroms
-    @test df[:first] == Bag.firsts
-    @test df[:last] == Bag.lasts
-    @test df[:value] == Bag.values
+    @test df.chrom == Bag.chroms
+    @test df.first == Bag.firsts
+    @test df.last == Bag.lasts
+    @test df.value == Bag.values
 
     @test DataFrame(Bag.records) == Bag.records |> DataFrame
 
@@ -23,10 +23,10 @@
     @test typeof(df2) == DataFrame
     @test size(df2) == (9,4)
 
-    @test df2[:chrom] == Bag.chroms
-    @test df2[:first] == Bag.firsts
-    @test df2[:last] == Bag.lasts
-    @test df2[:value] == Bag.values
+    @test df2.chrom == Bag.chroms
+    @test df2.first == Bag.firsts
+    @test df2.last == Bag.lasts
+    @test df2.value == Bag.values
 
     @test DataFrame(load(Bag.file)) == load(Bag.file) |> DataFrame
 
@@ -36,10 +36,10 @@
     @test typeof(df3) == DataFrame
     @test size(df3) == (9,4)
 
-    @test df3[:chrom] == Bag.chroms
-    @test df3[:first] == Bag.firsts
-    @test df3[:last] == Bag.lasts
-    @test df3[:value] == Bag.values
+    @test df3.chrom == Bag.chroms
+    @test df3.first == Bag.firsts
+    @test df3.last == Bag.lasts
+    @test df3.value == Bag.values
 
     @test DataFrame(load(Bag.file_headerless)) == load(Bag.file_headerless) |> DataFrame
 
