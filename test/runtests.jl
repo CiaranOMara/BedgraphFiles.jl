@@ -22,7 +22,7 @@ const lasts = [49302300, 49302600, 49302900, 49303200, 49303500, 49303800, 49304
 const values = [-1.0, -0.75, -0.50, -0.25, 0.0, 0.25, 0.50, 0.75, 1.00]
 
 const record = Bedgraph.Record("chr1", 1, 1, 0)
-const records = convert(Vector{Bedgraph.Record}, Bag.chroms, Bag.firsts, Bag.lasts, Bag.values)
+const records = Bedgraph.Record.(Bag.chroms, Bag.firsts, Bag.lasts, Bag.values)
 
 const file = joinpath(@__DIR__, "data.bedgraph")
 const file_headerless = joinpath(@__DIR__, "data-headerless.bedgraph")
