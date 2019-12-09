@@ -14,7 +14,7 @@ import IterableTables
 
 
 function __init__()
-    @require DataFrames="a93c6f00-e57d-5684-b7b6-d8193f3e46c0" include(joinpath(@__DIR__, "integrations","DataFrames.jl")) 
+    @require DataFrames="a93c6f00-e57d-5684-b7b6-d8193f3e46c0" include(joinpath(@__DIR__, "integrations","DataFrames.jl"))
 end
 
 const BedgraphFileFormat = File{format"bedGraph"}
@@ -77,7 +77,7 @@ end
 function _Records(x) :: Vector{Bedgraph.Record} #TODO: consider formalising Records function in bedgraph (e.g. Bedgraph.Records, Bedgraph.Bedgraph.Records) that returns Vector{Bedgraph.Record}.
     cols, names = create_columns_from_iterabletable(x, na_representation=:missing)
 
-    return convert(Vector{Bedgraph.Record}, cols[1], cols[2], cols[3], cols[4])
+    return Bedgraph.Record.(cols[1], cols[2], cols[3], cols[4])
 end
 
 function Vector{Bedgraph.Record}(x::AbstractVector{T}) :: Vector{Bedgraph.Record} where {T<:NamedTuple}
