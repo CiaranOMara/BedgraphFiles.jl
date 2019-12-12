@@ -37,8 +37,8 @@ using .Bag
 
 @testset "BedgraphFiles" begin
 
-@test isfile(Bag.file)
-@test isfile(Bag.file_headerless)
+@test isfile(Bag.file) == true
+@test isfile(Bag.file_headerless) == true
 
 # Load tests.
 loader = load(Bag.file)
