@@ -28,10 +28,10 @@ function Base.show(io::IO, source::BedgraphFile)
     TableShowUtils.printtable(io, getiterator(source), "bedGraph file")
 end
 
-function Base.read(file::BedgraphFile) :: Vector{Bedgraph.Record}
+function Base.read(file::BedgraphFile, type::Type = Vector{Bedgraph.Record}) :: Vector{Bedgraph.Record}
     # Read file using Bedgraph package.
     return open(file.filename, "r") do io
-        Bedgraph.readRecords(io)
+        Bedgraph.read(io, type)
     end
 end
 
@@ -62,7 +62,7 @@ end
 
 function IteratorInterfaceExtensions.getiterator(file::BedgraphFile)
 
-    records = read(file) #TODO: Generate iterator from first record?
+    records = read(file) #TODO: create stream iterator.
 
     it = getiterator(records)
 
