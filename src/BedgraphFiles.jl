@@ -31,7 +31,7 @@ end
 function Base.read(file::BedgraphFile) :: Vector{Bedgraph.Record}
     # Read file using Bedgraph package.
     return open(file.filename, "r") do io
-        Bedgraph.readRecords(io)
+        Bedgraph.read(io, Vector{Bedgraph.Record})
     end
 end
 
