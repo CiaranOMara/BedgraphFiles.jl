@@ -95,10 +95,11 @@ function Vector{Bedgraph.Record}(x::T) :: Vector{Bedgraph.Record} where {T} #TOD
     if TableTraits.isiterabletable(x)
         @debug "Vector{Bedgraph.Record}(x) - isiterabletable"
         return _Records(x)
-    else
-        @debug "Vector{Bedgraph.Record}(x) - converting"
-        return convert(Vector{Bedgraph.Record}, x)
     end
+
+    @debug "Vector{Bedgraph.Record}(x) - converting"
+    return convert(Vector{Bedgraph.Record}, x)
+
 end
 
 function save(file::BedgraphFileFormat, header::Bedgraph.BedgraphHeader, records::Vector{Bedgraph.Record}) :: Vector{Bedgraph.Record}
