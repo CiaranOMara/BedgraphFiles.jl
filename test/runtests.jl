@@ -70,7 +70,7 @@ using .Bag
 
     @test Bag.records == load(Bag.tmp_output_path) |> Vector{Bedgraph.Record}
 
-    # Save usign query.
+    # Save using query.
     Bag.records |> save(Bag.tmp_output_path)
     @test Bag.records == Vector{Bedgraph.Record}(load(Bag.tmp_output_path))
     @test Bag.records == load(Bag.tmp_output_path) |> Vector{Bedgraph.Record}
