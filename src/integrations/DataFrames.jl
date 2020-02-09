@@ -1,10 +1,10 @@
 @debug "BedgraphFiles loading DataFrames integration."
 
-function Base.convert(::Type{Bedgraph.Record}, row::DataFrames.DataFrameRow) :: Bedgraph.Record
+function Base.convert(::Type{Bedgraph.Record}, row::DataFrames.DataFrameRow)
     return Bedgraph.Record(row[1], row[2], row[3], row[4]) # Note: using index to allow flexible column names.
 end
 
-function Base.convert(::Type{Vector{Bedgraph.Record}}, df::DataFrames.DataFrame) :: Vector{Bedgraph.Record}
+function Base.convert(::Type{Vector{Bedgraph.Record}}, df::DataFrames.DataFrame)
 
     records = Vector{Bedgraph.Record}(undef, size(df)[1])
 

@@ -79,16 +79,6 @@ function _Records(x) :: Vector{Bedgraph.Record} #TODO: consider formalising Reco
     return Bedgraph.Record.(cols[1], cols[2], cols[3], cols[4])
 end
 
-function Vector{Bedgraph.Record}(x::AbstractVector{T}) :: Vector{Bedgraph.Record} where {T<:NamedTuple}
-    @debug "Vector{Bedgraph.Record}(x::AbstractVector{T})"
-    return  _Records(x)
-end
-
-function Vector{Bedgraph.Record}(file::B) :: Vector{Bedgraph.Record} where {B<:BedgraphFile}
-    @debug "Vector{Bedgraph.Record}(file::BedgraphFile)"
-    return read(file)
-end
-
 function Vector{Bedgraph.Record}(x::T) :: Vector{Bedgraph.Record} where {T} #TODO: consider formalising Records function in bedgraph (e.g. Bedgraph.Records, Bedgraph.Bedgraph.Records) that returns Vector{Bedgraph.Record}.
 
     if TableTraits.isiterabletable(x)
@@ -96,18 +86,17 @@ function Vector{Bedgraph.Record}(x::T) :: Vector{Bedgraph.Record} where {T} #TOD
         return _Records(x)
     end
 
-    @debug "Vector{Bedgraph.Record}(x) - converting"
-    return convert(Vector{Bedgraph.Record}, x)
+    return x #Note: returned x will be converted to type Vector{Bedgraph.Record}.
 end
 
-function save(file::BedgraphFileFormat, header::Bedgraph.BedgraphHeader, records::Vector{Bedgraph.Record}) :: Vector{Bedgraph.Record}
+function save(file::BedgraphFileFormat, header::Bedgraph.BedgraphHeader, records::Vector{Bedgraph.Record})
 
     write(file.filename, header, records)
 
     return records #Note: this return is useful when piping (e.g., records = some_operation | save(file)).
 end
 
-function save(file::BedgraphFileFormat, records::Vector{Bedgraph.Record}; bump_forward = true) :: Vector{Bedgraph.Record}
+function save(file::BedgraphFileFormat, records::Vector{Bedgraph.Record}; bump_forward = true)
 
     sort!(records)
 
