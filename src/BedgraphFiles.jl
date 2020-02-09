@@ -33,7 +33,6 @@ function Base.read(file::BedgraphFile) :: Vector{Bedgraph.Record}
     return open(file.filename, "r") do io
         Bedgraph.readRecords(io)
     end
-
 end
 
 function load(f::BedgraphFileFormat; args...)
@@ -99,7 +98,6 @@ function Vector{Bedgraph.Record}(x::T) :: Vector{Bedgraph.Record} where {T} #TOD
 
     @debug "Vector{Bedgraph.Record}(x) - converting"
     return convert(Vector{Bedgraph.Record}, x)
-
 end
 
 function save(file::BedgraphFileFormat, header::Bedgraph.BedgraphHeader, records::Vector{Bedgraph.Record}) :: Vector{Bedgraph.Record}

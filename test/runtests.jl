@@ -37,57 +37,57 @@ using .Bag
 
 @testset "BedgraphFiles" begin
 
-@test isfile(Bag.file) == true
-@test isfile(Bag.file_headerless) == true
+    @test isfile(Bag.file) == true
+    @test isfile(Bag.file_headerless) == true
 
-# Load tests.
-loader = load(Bag.file)
-@test IteratorInterfaceExtensions.isiterable(loader) == true
-@test TableTraits.isiterabletable(loader) == true
+    # Load tests.
+    loader = load(Bag.file)
+    @test IteratorInterfaceExtensions.isiterable(loader) == true
+    @test TableTraits.isiterabletable(loader) == true
 
-loaded = Vector{Bedgraph.Record}(loader)
-@test Vector{Bedgraph.Record} == typeof(loaded)
+    loaded = Vector{Bedgraph.Record}(loader)
+    @test Vector{Bedgraph.Record} == typeof(loaded)
 
-loader_from_headerless = load(Bag.file_headerless)
-@test isiterable(loader_from_headerless) == true
-@test TableTraits.isiterabletable(loader_from_headerless) == true
+    loader_from_headerless = load(Bag.file_headerless)
+    @test isiterable(loader_from_headerless) == true
+    @test TableTraits.isiterabletable(loader_from_headerless) == true
 
-loaded_from_headerless = Vector{Bedgraph.Record}(loader_from_headerless)
-@test Vector{Bedgraph.Record} == typeof(loaded_from_headerless)
+    loaded_from_headerless = Vector{Bedgraph.Record}(loader_from_headerless)
+    @test Vector{Bedgraph.Record} == typeof(loaded_from_headerless)
 
-@test IteratorInterfaceExtensions.isiterable(Bag.records) == true
-@test TableTraits.isiterabletable(Bag.records) == true
+    @test IteratorInterfaceExtensions.isiterable(Bag.records) == true
+    @test TableTraits.isiterabletable(Bag.records) == true
 
-@test Bag.records == loaded
-@test Bag.records == loaded_from_headerless
+    @test Bag.records == loaded
+    @test Bag.records == loaded_from_headerless
 
-# Save and load from Vector{Bedgraph.Record}.
-save(Bag.tmp_output_path, Bag.records)
+    # Save and load from Vector{Bedgraph.Record}.
+    save(Bag.tmp_output_path, Bag.records)
 
-@debug "direct load into Vector{Bedgraph.Record} - commencing"
-@test Bag.records == Vector{Bedgraph.Record}(load(Bag.tmp_output_path))
-@debug "direct load into Vector{Bedgraph.Record} - complete"
+    @debug "direct load into Vector{Bedgraph.Record} - commencing"
+    @test Bag.records == Vector{Bedgraph.Record}(load(Bag.tmp_output_path))
+    @debug "direct load into Vector{Bedgraph.Record} - complete"
 
-@test Bag.records == load(Bag.tmp_output_path) |> Vector{Bedgraph.Record}
+    @test Bag.records == load(Bag.tmp_output_path) |> Vector{Bedgraph.Record}
 
-# Save usign query.
-Bag.records |> save(Bag.tmp_output_path)
-@test Bag.records == Vector{Bedgraph.Record}(load(Bag.tmp_output_path))
-@test Bag.records == load(Bag.tmp_output_path) |> Vector{Bedgraph.Record}
+    # Save usign query.
+    Bag.records |> save(Bag.tmp_output_path)
+    @test Bag.records == Vector{Bedgraph.Record}(load(Bag.tmp_output_path))
+    @test Bag.records == load(Bag.tmp_output_path) |> Vector{Bedgraph.Record}
 
-# Check return of data from save method.
-@test Bag.records == Bag.records |> save(Bag.tmp_output_path)
+    # Check return of data from save method.
+    @test Bag.records == Bag.records |> save(Bag.tmp_output_path)
 
-# Check piping/continuations through Query.jl.
-load("data.bedgraph") |> @filter(_.chrom == "chr19" && _.first > 49302900 && _.last < 49303800) |> save(Bag.tmp_output_path)
-@test [Bedgraph.Record("chr19", 49303200, 49303500, 0.0)] == load(Bag.tmp_output_path) |> Vector{Bedgraph.Record}
+    # Check piping/continuations through Query.jl.
+    load("data.bedgraph") |> @filter(_.chrom == "chr19" && _.first > 49302900 && _.last < 49303800) |> save(Bag.tmp_output_path)
+    @test [Bedgraph.Record("chr19", 49303200, 49303500, 0.0)] == load(Bag.tmp_output_path) |> Vector{Bedgraph.Record}
 
-@testset "Integrations" begin
-    include("integrations/test-DataFrames.jl")
-end # testset Transformers
+    @testset "Integrations" begin
+        include("integrations/test-DataFrames.jl")
+    end # testset Transformers
 
-println()
-show(load(Bag.file))
-println()
+    println()
+    show(load(Bag.file))
+    println()
 
 end
