@@ -4,8 +4,6 @@ using Bedgraph
 using IteratorInterfaceExtensions
 using TableTraits
 
-using DataFrames
-
 using Test
 using Logging
 
@@ -78,9 +76,9 @@ using .Bag
     @test Bag.records == Bag.records |> save(Bag.tmp_output_path)
 
     @testset "Integrations" begin
-        include("integrations/test-DataFrames.jl")
+        include("integrations/test-Tables.jl")
         include("integrations/test-QueryOperators.jl")
-    end # testset Transformers
+    end # testset Integrations
 
     println()
     show(load(Bag.file))
