@@ -80,6 +80,7 @@ using .Bag
     @test Bag.record == convert(Bedgraph.Record, (chrom = "chr1", left=1, right=1, value=0))
 
     @testset "Integrations" begin
+        include("integrations/test-GenomicFeatures.jl")
         include("integrations/test-Tables.jl")
         include("integrations/test-QueryOperators.jl")
     end # testset Integrations

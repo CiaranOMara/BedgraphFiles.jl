@@ -14,6 +14,7 @@ import IterableTables
 
 
 function __init__()
+    @require GenomicFeatures="899a7d2d-5c61-547b-bef9-6698a8d05446" include(joinpath(@__DIR__, "integrations","GeonomicFeatures.jl"))
     @require Tables="bd369af6-aec1-5ad0-b16a-f7cc5008161c" include(joinpath(@__DIR__, "integrations","Tables.jl"))
     @require QueryOperators="2aef5ad7-51ca-5a8f-8e88-e75cf067b44b" include(joinpath(@__DIR__, "integrations","QueryOperators.jl"))
 end
