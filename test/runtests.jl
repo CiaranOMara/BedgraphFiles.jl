@@ -14,20 +14,20 @@ using Logging
 
 module Bag
 
-using Bedgraph
+    using Bedgraph
 
-const chroms = ["chr19", "chr19", "chr19", "chr19", "chr19", "chr19", "chr19", "chr19", "chr19"]
-const firsts = [49302000, 49302300, 49302600, 49302900, 49303200, 49303500, 49303800, 49304100, 49304400]
-const lasts = [49302300, 49302600, 49302900, 49303200, 49303500, 49303800, 49304100, 49304400, 49304700]
-const values = [-1.0, -0.75, -0.50, -0.25, 0.0, 0.25, 0.50, 0.75, 1.00]
+    const chroms = ["chr19", "chr19", "chr19", "chr19", "chr19", "chr19", "chr19", "chr19", "chr19"]
+    const firsts = [49302000, 49302300, 49302600, 49302900, 49303200, 49303500, 49303800, 49304100, 49304400]
+    const lasts = [49302300, 49302600, 49302900, 49303200, 49303500, 49303800, 49304100, 49304400, 49304700]
+    const values = [-1.0, -0.75, -0.50, -0.25, 0.0, 0.25, 0.50, 0.75, 1.00]
 
-const record = Bedgraph.Record("chr1", 1, 1, 0)
-const records = Bedgraph.Record.(Bag.chroms, Bag.firsts, Bag.lasts, Bag.values)
+    const record = Bedgraph.Record("chr1", 1, 1, 0)
+    const records = Bedgraph.Record.(Bag.chroms, Bag.firsts, Bag.lasts, Bag.values)
 
-const file = joinpath(@__DIR__, "data.bedgraph")
-const file_headerless = joinpath(@__DIR__, "data-headerless.bedgraph")
+    const file = joinpath(@__DIR__, "data.bedgraph")
+    const file_headerless = joinpath(@__DIR__, "data-headerless.bedgraph")
 
-const tmp_output_path = tempname() * ".bedgraph"
+    const tmp_output_path = tempname() * ".bedgraph"
 
 end # module Bag
 
