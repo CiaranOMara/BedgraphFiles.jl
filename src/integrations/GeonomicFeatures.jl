@@ -1,12 +1,12 @@
 @debug "BedgraphFiles loading GenomicFeatures integration."
 
-function Base.convert(::Type{Bedgraph.Record}, interval::GenomicFeatures.Interval{Nothing})
+function Base.convert(::Type{Bedgraph.Record}, interval::GenomicFeatures.Interval{Nothing}, null_value=1) :: Bedgraph.Record
 
     return Bedgraph.Record(
         GenomicFeatures.seqname(interval),
         GenomicFeatures.leftposition(interval),
         GenomicFeatures.rightposition(interval),
-        0
+        null_value #Note: the default null value replacement of 0 is not useful as it does not show in IGV.
     )
 
 end
