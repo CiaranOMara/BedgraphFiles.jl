@@ -15,6 +15,7 @@ import IterableTables
 
 function __init__()
     @require DataFrames="a93c6f00-e57d-5684-b7b6-d8193f3e46c0" include(joinpath(@__DIR__, "integrations","DataFrames.jl"))
+    @require GenomicFeatures="899a7d2d-5c61-547b-bef9-6698a8d05446" include(joinpath(@__DIR__, "integrations","GeonomicFeatures.jl"))
 end
 
 const BedgraphFileFormat = File{format"bedGraph"}
