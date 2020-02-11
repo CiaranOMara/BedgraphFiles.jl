@@ -9,12 +9,12 @@
     @test GenomicFeatures.Interval("chr1", 1, 1, '?', 0) == convert(GenomicFeatures.Interval{Int64}, Bag.record)
 
 
-    # Test conversion to IntervalCollection{Nothing}
+    # Test conversion to Vector{Interval{Nothing}}
+    @test convert(Vector{GenomicFeatures.Interval{Nothing}}, Bag.records) == convert(Vector{GenomicFeatures.Interval{Nothing}}, load(Bag.file))
+    @test convert(Vector{GenomicFeatures.Interval{Float64}}, Bag.records) == convert(Vector{GenomicFeatures.Interval{Float64}}, load(Bag.file))
     col = convert(GenomicFeatures.IntervalCollection{Nothing}, Bag.records)
 
     @test  GenomicFeatures.IntervalCollection{Nothing}(Bag.records) == convert(GenomicFeatures.IntervalCollection{Nothing}, Bag.records)
-    @test  GenomicFeatures.IntervalCollection{Float64}(Bag.records) == convert(GenomicFeatures.IntervalCollection{Float64}, Bag.records)
-
 
     @test col == GenomicFeatures.IntervalCollection{Nothing}(load(Bag.file))
     @test col == GenomicFeatures.IntervalCollection{Nothing}(load(Bag.file_headerless))
@@ -26,12 +26,15 @@
     # Test conversion to IntervalCollection{Float64}.
     col = convert(GenomicFeatures.IntervalCollection{Float64}, Bag.records)
 
+    @test  GenomicFeatures.IntervalCollection{Float64}(Bag.records) == convert(GenomicFeatures.IntervalCollection{Float64}, Bag.records)
+
     @test col == GenomicFeatures.IntervalCollection{Float64}(load(Bag.file))
     @test col == GenomicFeatures.IntervalCollection{Float64}(load(Bag.file_headerless))
 
     @test col == load(Bag.file) |> GenomicFeatures.IntervalCollection{Float64}
     @test col == load(Bag.file_headerless) |> GenomicFeatures.IntervalCollection{Float64}
 
+    # Test converstion to Vector{Bedgraph.Record} from IntervalCollection
     @test Bag.records == convert(Vector{Bedgraph.Record}, col)
     @test Bag.records == Vector{Bedgraph.Record}(col)
 

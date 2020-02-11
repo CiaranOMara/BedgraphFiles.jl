@@ -22,7 +22,7 @@ function Base.convert(::Type{Bedgraph.Record}, interval::GenomicFeatures.Interva
 
 end
 
-function Base.convert(::Type{Vector{Bedgraph.Record}}, data::Union{GenomicFeatures.IntervalCollection, Vector{GenomicFeatures.Interval}})
+function Base.convert(::Type{Vector{Bedgraph.Record}}, data::Union{GenomicFeatures.IntervalCollection{T}, Vector{GenomicFeatures.Interval{T}}}) where T
 
     records = Vector{Bedgraph.Record}(undef, length(data))
 
