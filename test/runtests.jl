@@ -75,6 +75,10 @@ using .Bag
     # Check return of data from save method.
     @test Bag.records == Bag.records |> save(Bag.tmp_output_path)
 
+    # Check convert
+    @test Bag.record == convert(Bedgraph.Record, (chrom = "chr1", first=1, last=1, value=0))
+    @test Bag.record == convert(Bedgraph.Record, (chrom = "chr1", left=1, right=1, value=0))
+
     @testset "Integrations" begin
         include("integrations/test-Tables.jl")
         include("integrations/test-QueryOperators.jl")
