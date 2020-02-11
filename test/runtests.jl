@@ -35,7 +35,7 @@ end # module Bag
 using .Bag
 
 
-@testset "BedgraphFiles" begin
+ @testset "BedgraphFiles" begin
 
     @test isfile(Bag.file) == true
     @test isfile(Bag.file_headerless) == true
@@ -45,16 +45,17 @@ using .Bag
     @test IteratorInterfaceExtensions.isiterable(loader) == true
     @test TableTraits.isiterabletable(loader) == true
 
-    loaded = Vector{Bedgraph.Record}(loader)
-    @test Vector{Bedgraph.Record} == typeof(loaded)
+    loaded = Vector{Bedgraph.Record{Float64}}(loader)
+    @test Vector{Bedgraph.Record{Float64}} == typeof(loaded)
 
     loader_from_headerless = load(Bag.file_headerless)
     @test isiterable(loader_from_headerless) == true
     @test TableTraits.isiterabletable(loader_from_headerless) == true
 
-    loaded_from_headerless = Vector{Bedgraph.Record}(loader_from_headerless)
-    @test Vector{Bedgraph.Record} == typeof(loaded_from_headerless)
+    loaded_from_headerless = Vector{Bedgraph.Record{Float64}}(loader_from_headerless)
+    @test Vector{Bedgraph.Record{Float64}} == typeof(loaded_from_headerless)
 
+    @test Vector{Bedgraph.Record{Float64}} == typeof(Bag.records)
     @test IteratorInterfaceExtensions.isiterable(Bag.records) == true
     @test TableTraits.isiterabletable(Bag.records) == true
 
