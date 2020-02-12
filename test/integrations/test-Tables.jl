@@ -1,6 +1,6 @@
-@testset "DataFrames" begin
+@testset "Tables" begin
 
-    using DataFrames
+    using DataFrames #Note: testing Tables via DataFrames.
 
 
     # DataFrame from Vector{Bedgraph.Record}.
@@ -51,4 +51,4 @@
     df |> save(Bag.tmp_output_path)
     @test df == load(Bag.tmp_output_path) |> DataFrame
 
-end # test DataFrames
+end # testset DataFrames
