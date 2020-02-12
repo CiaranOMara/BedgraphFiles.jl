@@ -4,9 +4,6 @@ using Bedgraph
 using IteratorInterfaceExtensions
 using TableTraits
 
-using DataFrames
-using Query
-
 using Test
 using Logging
 
@@ -70,7 +67,7 @@ using .Bag
 
     @test Bag.records == load(Bag.tmp_output_path) |> Vector{Bedgraph.Record}
 
-    # Save using query.
+    # Save using pipe.
     Bag.records |> save(Bag.tmp_output_path)
     @test Bag.records == Vector{Bedgraph.Record}(load(Bag.tmp_output_path))
     @test Bag.records == load(Bag.tmp_output_path) |> Vector{Bedgraph.Record}
@@ -78,13 +75,14 @@ using .Bag
     # Check return of data from save method.
     @test Bag.records == Bag.records |> save(Bag.tmp_output_path)
 
-    # Check piping/continuations through Query.jl.
-    load("data.bedgraph") |> @filter(_.chrom == "chr19" && _.first > 49302900 && _.last < 49303800) |> save(Bag.tmp_output_path)
-    @test [Bedgraph.Record("chr19", 49303200, 49303500, 0.0)] == load(Bag.tmp_output_path) |> Vector{Bedgraph.Record}
+    # Check convert
+    @test Bag.record == convert(Bedgraph.Record, (chrom = "chr1", first=1, last=1, value=0))
+    @test Bag.record == convert(Bedgraph.Record, (chrom = "chr1", left=1, right=1, value=0))
 
     @testset "Integrations" begin
-        include("integrations/test-DataFrames.jl")
-    end # testset Transformers
+        include("integrations/test-Tables.jl")
+        include("integrations/test-QueryOperators.jl")
+    end # testset Integrations
 
     println()
     show(load(Bag.file))

@@ -14,7 +14,8 @@ import IterableTables
 
 
 function __init__()
-    @require DataFrames="a93c6f00-e57d-5684-b7b6-d8193f3e46c0" include(joinpath(@__DIR__, "integrations","DataFrames.jl"))
+    @require Tables="bd369af6-aec1-5ad0-b16a-f7cc5008161c" include(joinpath(@__DIR__, "integrations","Tables.jl"))
+    @require QueryOperators="2aef5ad7-51ca-5a8f-8e88-e75cf067b44b" include(joinpath(@__DIR__, "integrations","QueryOperators.jl"))
 end
 
 const BedgraphFileFormat = File{format"bedGraph"}
@@ -73,20 +74,33 @@ function Base.collect(x::BedgraphFile)
     return collect(getiterator(x))
 end
 
-function _Records(x) :: Vector{Bedgraph.Record} #TODO: consider formalising Records function in bedgraph (e.g. Bedgraph.Records, Bedgraph.Bedgraph.Records) that returns Vector{Bedgraph.Record}.
-    cols, names = create_columns_from_iterabletable(x, na_representation=:missing)
+function Base.convert(el::Type{Bedgraph.Record}, nt::NamedTuple{(:chrom, :first, :last, :value),Tuple{String,Int64,Int64,R}}) where R <: Real
+    @debug "Convert - strict."
+    return el(nt.chrom, nt.first, nt.last, nt.value)
+end
 
-    return Bedgraph.Record.(cols[1], cols[2], cols[3], cols[4])
+function Base.convert(el::Type{Bedgraph.Record}, nt::NamedTuple{names,Tuple{String,Int64,Int64,R}}) where {R <: Real, names}
+    @debug "Convert - names."
+    return el(nt[1], nt[2], nt[3], nt[4])
+end
+
+function Base.convert(el::Type{Vector{Bedgraph.Record}}, itr::TableTraitsUtils.TableIterator)
+
+    @static if VERSION < v"1.0.0"
+        return convert.(eltype(el), collect(itr))
+    else
+        return convert.(eltype(el), itr)
+    end
 end
 
 function Vector{Bedgraph.Record}(x::T) :: Vector{Bedgraph.Record} where {T} #TODO: consider formalising Records function in bedgraph (e.g. Bedgraph.Records, Bedgraph.Bedgraph.Records) that returns Vector{Bedgraph.Record}.
 
     if TableTraits.isiterabletable(x)
         @debug "Vector{Bedgraph.Record}(x) - isiterabletable"
-        return _Records(x)
+        return getiterator(x) # Note: conversion of the returned table iterator to type Vector{Bedgraph.Record} will be attempted.
     end
 
-    return x #Note: returned x will be converted to type Vector{Bedgraph.Record}.
+    return x # Note: conversion of the returned value x to type Vector{Bedgraph.Record} will be attempted.
 end
 
 function save(file::BedgraphFileFormat, header::Bedgraph.BedgraphHeader, records::Vector{Bedgraph.Record})
@@ -107,9 +121,7 @@ end
 
 function save(file::BedgraphFileFormat, data; bump_forward = true)
 
-    it = getiterator(data)
-
-    records = Vector{Bedgraph.Record}(it)
+    records = Vector{Bedgraph.Record}(data)
 
     save(file, records, bump_forward = bump_forward)
 
