@@ -6,13 +6,13 @@
 [![Build Status](https://api.cirrus-ci.com/github/CiaranOMara/BedgraphFiles.jl.svg)](https://cirrus-ci.com/github/CiaranOMara/BedgraphFiles.jl)
 [![codecov.io](http://codecov.io/github/CiaranOMara/BedgraphFiles.jl/coverage.svg?branch=master)](http://codecov.io/github/CiaranOMara/BedgraphFiles.jl?branch=master)
 
+> This project follows the [semver](http://semver.org) pro forma and uses the [git-flow branching model](http://nvie.com/git-model "original
+blog post").
+
 ## Overview
 
 This package provides load and save support for [Bedgraph](https://github.com/CiaranOMara/Bedgraph.jl)
 under the [FileIO](https://github.com/JuliaIO/FileIO.jl) package, and also implements the [IterableTables](https://github.com/davidanthoff/IterableTables.jl) interface for easy conversion between tabular data structures.
-
-> This project follows the [semver](http://semver.org) pro forma and uses the [git-flow branching model](http://nvie.com/git-model "original
-blog post").
 
 ## Installation
 You can install BedgraphFiles from the [Julia REPL](https://docs.julialang.org/en/v1/manual/getting-started/).
