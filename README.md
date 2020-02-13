@@ -33,6 +33,7 @@ To load a bedGraph file into a ``Vector{Bedgraph.Record}``, use the following Ju
 using FileIO, BedgraphFiles, Bedgraph
 
 records = Vector{Bedgraph.Record}(load("data.bedgraph"))
+records = collect(Bedgraph.Record, load("data.bedgraph"))
 ````
 
 ### Saving bedGraph files

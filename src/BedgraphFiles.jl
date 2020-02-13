@@ -74,6 +74,10 @@ function Base.collect(x::BedgraphFile)
     return collect(getiterator(x))
 end
 
+function Base.collect(::Type{T}, x::BedgraphFile) where T
+    return collect(T, getiterator(x))
+end
+
 function Base.convert(el::Type{Bedgraph.Record}, nt::NamedTuple{(:chrom, :first, :last, :value),Tuple{String,Int64,Int64,R}}) where R <: Real
     @debug "Convert - strict."
     return el(nt.chrom, nt.first, nt.last, nt.value)
