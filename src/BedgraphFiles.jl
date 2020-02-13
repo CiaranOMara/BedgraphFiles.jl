@@ -84,13 +84,8 @@ function Base.convert(el::Type{Bedgraph.Record}, nt::NamedTuple{names,Tuple{Stri
     return el(nt[1], nt[2], nt[3], nt[4])
 end
 
-function Base.convert(el::Type{Vector{Bedgraph.Record}}, itr::TableTraitsUtils.TableIterator)
-
-    @static if VERSION < v"1.0.0"
-        return convert.(eltype(el), collect(itr))
-    else
-        return convert.(eltype(el), itr)
-    end
+function Base.convert(::Type{Vector{Bedgraph.Record}}, itr::TableTraitsUtils.TableIterator)
+    return collect(Bedgraph.Record, itr)
 end
 
 function Vector{Bedgraph.Record}(x::T) :: Vector{Bedgraph.Record} where {T} #TODO: consider formalising Records function in bedgraph (e.g. Bedgraph.Records, Bedgraph.Bedgraph.Records) that returns Vector{Bedgraph.Record}.
