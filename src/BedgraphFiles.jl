@@ -3,7 +3,6 @@ __precompile__()
 module BedgraphFiles
 
 using FileIO
-using Requires
 
 using Bedgraph
 
@@ -11,12 +10,6 @@ using IteratorInterfaceExtensions, TableTraits, TableTraitsUtils
 using TableShowUtils
 
 import IterableTables
-
-
-function __init__()
-    @require Tables="bd369af6-aec1-5ad0-b16a-f7cc5008161c" include(joinpath(@__DIR__, "integrations","Tables.jl"))
-    @require QueryOperators="2aef5ad7-51ca-5a8f-8e88-e75cf067b44b" include(joinpath(@__DIR__, "integrations","QueryOperators.jl"))
-end
 
 const BedgraphFileFormat = File{format"bedGraph"}
 
@@ -88,8 +81,12 @@ function Base.convert(::Type{T}, nt::NamedTuple{names,Tuple{String,Int64,Int64,R
     return T(nt[1], nt[2], nt[3], nt[4])
 end
 
-function Base.convert(::Type{Vector{T}}, itr::TableTraitsUtils.TableIterator) where T <: Bedgraph.Record
+function Base.convert(::Type{Vector{T}}, itr) where T <: Bedgraph.Record
     return collect(T, itr)
+end
+
+function Base.convert(::Type{Vector{T}}, itr::Vector{T}) where T <: Bedgraph.Record
+    return itr
 end
 
 function Vector{T}(x) :: Vector{T} where {T <: Bedgraph.Record} #TODO: consider formalising Records function in bedgraph (e.g. Bedgraph.Records, Bedgraph.Bedgraph.Records) that returns Vector{Bedgraph.Record}.
