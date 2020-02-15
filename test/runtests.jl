@@ -63,6 +63,7 @@ using .Bag
 
     @debug "direct load into Vector{Bedgraph.Record} - commencing"
     @test Bag.records == Vector{Bedgraph.Record}(load(Bag.tmp_output_path))
+    @test Bag.records == collect(Bedgraph.Record, load(Bag.tmp_output_path))
     @debug "direct load into Vector{Bedgraph.Record} - complete"
 
     @test Bag.records == load(Bag.tmp_output_path) |> Vector{Bedgraph.Record}

@@ -3,7 +3,6 @@ __precompile__()
 module BedgraphFiles
 
 using FileIO
-using Requires
 
 using Bedgraph
 
@@ -11,12 +10,6 @@ using IteratorInterfaceExtensions, TableTraits, TableTraitsUtils
 using TableShowUtils
 
 import IterableTables
-
-
-function __init__()
-    @require Tables="bd369af6-aec1-5ad0-b16a-f7cc5008161c" include(joinpath(@__DIR__, "integrations","Tables.jl"))
-    @require QueryOperators="2aef5ad7-51ca-5a8f-8e88-e75cf067b44b" include(joinpath(@__DIR__, "integrations","QueryOperators.jl"))
-end
 
 const BedgraphFileFormat = File{format"bedGraph"}
 
@@ -29,10 +22,10 @@ function Base.show(io::IO, source::BedgraphFile)
     TableShowUtils.printtable(io, getiterator(source), "bedGraph file")
 end
 
-function Base.read(file::BedgraphFile, el::Type=Vector{Bedgraph.Record})
+function Base.read(file::BedgraphFile, ::Type{T}=Vector{Bedgraph.Record}) where T
     # Read file using Bedgraph package.
     return open(file.filename, "r") do io
-        Bedgraph.read(io, el)
+        Bedgraph.read(io, T)
     end
 end
 
@@ -42,10 +35,10 @@ end
 
 IteratorInterfaceExtensions.isiterable(x::BedgraphFile) = true
 TableTraits.isiterabletable(x::BedgraphFile) = true
-IteratorInterfaceExtensions.isiterable(x::Vector{Bedgraph.Record}) = true #Note: Vector{Bedgraph.Record} is iterable by default.
-TableTraits.isiterabletable(x::Vector{Bedgraph.Record}) = true
+IteratorInterfaceExtensions.isiterable(x::Vector{<:Bedgraph.Record}) = true #Note: Vector{Bedgraph.Record} is iterable by default.
+TableTraits.isiterabletable(x::Vector{<:Bedgraph.Record}) = true
 
-function IteratorInterfaceExtensions.getiterator(records::Vector{Bedgraph.Record})
+function IteratorInterfaceExtensions.getiterator(records::Vector{<:Bedgraph.Record})
 
     columns = [
         Bedgraph.chrom.(records),
@@ -74,26 +67,29 @@ function Base.collect(x::BedgraphFile)
     return collect(getiterator(x))
 end
 
-function Base.convert(el::Type{Bedgraph.Record}, nt::NamedTuple{(:chrom, :first, :last, :value),Tuple{String,Int64,Int64,R}}) where R <: Real
+function Base.collect(::Type{T}, x::BedgraphFile) where T
+    return collect(T, getiterator(x))
+end
+
+function Base.convert(::Type{T}, nt::NamedTuple{(:chrom, :first, :last, :value),Tuple{String,Int64,Int64,R}}) where {R <: Real, T<: Bedgraph.Record}
     @debug "Convert - strict."
-    return el(nt.chrom, nt.first, nt.last, nt.value)
+    return T(nt.chrom, nt.first, nt.last, nt.value)
 end
 
-function Base.convert(el::Type{Bedgraph.Record}, nt::NamedTuple{names,Tuple{String,Int64,Int64,R}}) where {R <: Real, names}
+function Base.convert(::Type{T}, nt::NamedTuple{names,Tuple{String,Int64,Int64,R}}) where {R <: Real, names, T<: Bedgraph.Record}
     @debug "Convert - names."
-    return el(nt[1], nt[2], nt[3], nt[4])
+    return T(nt[1], nt[2], nt[3], nt[4])
 end
 
-function Base.convert(el::Type{Vector{Bedgraph.Record}}, itr::TableTraitsUtils.TableIterator)
-
-    @static if VERSION < v"1.0.0"
-        return convert.(eltype(el), collect(itr))
-    else
-        return convert.(eltype(el), itr)
-    end
+function Base.convert(::Type{Vector{T}}, itr) where T <: Bedgraph.Record
+    return collect(T, itr)
 end
 
-function Vector{Bedgraph.Record}(x::T) :: Vector{Bedgraph.Record} where {T} #TODO: consider formalising Records function in bedgraph (e.g. Bedgraph.Records, Bedgraph.Bedgraph.Records) that returns Vector{Bedgraph.Record}.
+function Base.convert(::Type{Vector{T}}, itr::Vector{T}) where T <: Bedgraph.Record
+    return itr
+end
+
+function Vector{T}(x) :: Vector{T} where {T <: Bedgraph.Record} #TODO: consider formalising Records function in bedgraph (e.g. Bedgraph.Records, Bedgraph.Bedgraph.Records) that returns Vector{Bedgraph.Record}.
 
     if TableTraits.isiterabletable(x)
         @debug "Vector{Bedgraph.Record}(x) - isiterabletable"
@@ -103,14 +99,14 @@ function Vector{Bedgraph.Record}(x::T) :: Vector{Bedgraph.Record} where {T} #TOD
     return x # Note: conversion of the returned value x to type Vector{Bedgraph.Record} will be attempted.
 end
 
-function save(file::BedgraphFileFormat, header::Bedgraph.BedgraphHeader, records::Vector{Bedgraph.Record})
+function save(file::BedgraphFileFormat, header::Bedgraph.BedgraphHeader, records::Vector{<:Bedgraph.Record})
 
     write(file.filename, header, records)
 
     return records #Note: this return is useful when piping (e.g., records = some_operation | save(file)).
 end
 
-function save(file::BedgraphFileFormat, records::Vector{Bedgraph.Record}; bump_forward = true)
+function save(file::BedgraphFileFormat, records::Vector{<:Bedgraph.Record}; bump_forward = true)
 
     sort!(records)
 
