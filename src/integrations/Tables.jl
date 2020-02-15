@@ -1,10 +1,10 @@
 @debug "BedgraphFiles loading Tables integration."
 
-function Base.convert(el::Type{Vector{Bedgraph.Record}}, itr::Tables.DataValueRowIterator)
+function Base.convert(::Type{Vector{T}}, itr::Tables.DataValueRowIterator) where T <: Bedgraph.Record
 
     data = collect(itr)
+    @debug "Convert Tables.DataValueRowIterator" eltype(itr) itr
 
-    @debug "Convert Tables.DataValueRowIterator" typeof(data) eltype(data) data
 
-    return convert.(eltype(el), data)
+    return convert.(T, data)
 end

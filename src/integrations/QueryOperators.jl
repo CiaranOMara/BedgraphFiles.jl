@@ -1,10 +1,10 @@
 @debug "BedgraphFiles loading QueryOperators integration."
 
-function Base.convert(el::Type{Vector{Bedgraph.Record}}, query::QueryOperators.Enumerable)
+function Base.convert(::Type{Vector{T}}, query::QueryOperators.Enumerable) where T <: Bedgraph.Record
 
     data = collect(query)
+    @debug "Convert QueryOperators.Enumerable" eltype(query) query
 
-    @debug "Convert QueryOperators.Enumerable" typeof(data) eltype(data) data
 
-    return convert.(eltype(el), data)
+    return convert.(T, data)
 end
