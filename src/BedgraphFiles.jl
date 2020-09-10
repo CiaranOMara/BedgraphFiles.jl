@@ -67,7 +67,7 @@ function Base.collect(x::BedgraphFile)
     return collect(getiterator(x))
 end
 
-function Base.collect(::Type{T}, x::BedgraphFile) where T
+function Base.collect(T::Type, x::BedgraphFile)
     return collect(T, getiterator(x))
 end
 
@@ -81,22 +81,8 @@ function Base.convert(::Type{T}, nt::NamedTuple{names,Tuple{String,Int64,Int64,R
     return T(nt[1], nt[2], nt[3], nt[4])
 end
 
-function Base.convert(::Type{Vector{T}}, itr) where T <: Bedgraph.Record
-    return collect(T, itr)
-end
-
-function Base.convert(::Type{Vector{T}}, itr::Vector{T}) where T <: Bedgraph.Record
-    return itr
-end
-
-function Vector{T}(x) :: Vector{T} where {T <: Bedgraph.Record} #TODO: consider formalising Records function in bedgraph (e.g. Bedgraph.Records, Bedgraph.Bedgraph.Records) that returns Vector{Bedgraph.Record}.
-
-    if TableTraits.isiterabletable(x)
-        @debug "Vector{Bedgraph.Record}(x) - isiterabletable"
-        return getiterator(x) # Note: conversion of the returned table iterator to type Vector{Bedgraph.Record} will be attempted.
-    end
-
-    return x # Note: conversion of the returned value x to type Vector{Bedgraph.Record} will be attempted.
+function Vector{T}(x) where {T <: Bedgraph.Record}
+    return collect(T, getiterator(x))
 end
 
 function save(file::BedgraphFileFormat, header::Bedgraph.BedgraphHeader, records::Vector{<:Bedgraph.Record})
@@ -117,7 +103,7 @@ end
 
 function save(file::BedgraphFileFormat, data; bump_forward = true)
 
-    records = Vector{Bedgraph.Record}(data)
+    records = collect(Bedgraph.Record, getiterator(data))
 
     save(file, records, bump_forward = bump_forward)
 
