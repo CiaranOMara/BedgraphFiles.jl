@@ -1,8 +1,8 @@
 # BedgraphFiles.jl
 
 [![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
-[![codecov.io](http://codecov.io/github/CiaranOMara/BedgraphFiles.jl/coverage.svg?branch=master)](http://codecov.io/github/CiaranOMara/BedgraphFiles.jl?branch=master)
 ![Unit Tests](https://github.com/CiaranOMara/BedgraphFiles.jl/workflows/Unit%20Tests/badge.svg?branch=master)
+[![codecov](https://codecov.io/gh/CiaranOMara/BedgraphFiles.jl/branch/master/graph/badge.svg?branch=master)](https://codecov.io/gh/CiaranOMara/BedgraphFiles.jl?branch=master)
 
 > This project follows the [semver](http://semver.org) pro forma and uses the [git-flow branching model](http://nvie.com/git-model "original
 blog post").
